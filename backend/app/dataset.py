@@ -1,0 +1,984 @@
+"""
+CHRONOS-COASTAL Grounded Multi-Corridor Dataset
+Pan-India National Testbeds across 7,516 km Coastline:
+1. Kochi-Vembanad Estuary (Kerala / Arabian Sea) - Primary Calibrated Benchmark (2018 Deluge)
+2. Chennai Adyar-Cooum Delta (Tamil Nadu / Bay of Bengal) - Cyclone Michaung 2023 & 2015 Deluge
+3. Mumbai Mithi-Mahim Estuary (Maharashtra / Arabian Sea) - Urban Tidal Confluence & Choke
+4. Odisha Mahanadi Delta & Paradip Coast (Odisha / Bay of Bengal) - Supercyclone Surge Corridor
+"""
+
+from typing import Dict, List, Any, Optional
+
+CORRIDORS: Dict[str, Dict[str, Any]] = {
+    # =========================================================================
+    # CORRIDOR 1: KOCHI-VEMBANAD ESTUARY (PRIMARY BENCHMARK)
+    # =========================================================================
+    "kochi": {
+        "id": "kochi",
+        "name": "Kochi-Vembanad Estuary Corridor",
+        "region": "Ernakulam & Alappuzha, Kerala",
+        "sea_basin": "Arabian Sea",
+        "benchmark_event": "Kerala August 2018 Deluge (CWC Telemetry Calibrated)",
+        "center_lat": 9.9816,
+        "center_lon": 76.2999,
+        "zoom": 11,
+        "hydrologic_params": {
+            "inlet_throat_area_m2": 4800.0,     # Cochin Barmouth throat area
+            "inlet_discharge_coeff": 0.72,       # Discharge contraction coefficient
+            "surge_decay_coeff": 0.15,           # Surge decay rate per km inland (m/km)
+            "backwater_length_km": 34.5,         # M1 backwater curve exponential length scale
+            "inlet_throat_name": "Cochin Barmouth / Fort Kochi Inlet",
+            "base_river_discharge_m3s": 250.0,   # Non-flood baseline discharge
+            "nominal_surge_threshold_m": 1.20,
+            "floodplain_diffusion_km": 2.8,
+            "sar_specular_threshold_db": -3.5,
+            "parametric_faf_threshold": 0.20,    # Flooded Area Fraction trigger
+            "contingency_fund_total_usd": 5000000
+        },
+        "assets": [
+            {
+                "id": "G1_Pallikkara",
+                "name": "PGCIL Pallikkara 400/220kV Hub",
+                "type": "grid_source",
+                "category": "transmission",
+                "lat": 10.0280,
+                "lon": 76.4080,
+                "elevation_m": 25.0,
+                "plinth_m": 1.0,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 22.0,
+                "dist_river_km": 12.0,
+                "voltage_kv": 400,
+                "is_source": True,
+                "description": "Bulk 400kV intertie. Highly elevated on laterite plateau, immune to storm surge."
+            },
+            {
+                "id": "S1_Kalamassery",
+                "name": "KSEB Kalamassery 220kV Hub & SLDC",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 10.0572,
+                "lon": 76.3312,
+                "elevation_m": 15.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 14.0,
+                "dist_river_km": 2.5,
+                "voltage_kv": 220,
+                "is_source": False,
+                "description": "State Load Despatch Center. Elevated hub supplying Greater Kochi."
+            },
+            {
+                "id": "S2_Brahmapuram",
+                "name": "Brahmapuram 220kV Substation",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 9.9810,
+                "lon": 76.3620,
+                "elevation_m": 6.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 11.0,
+                "dist_river_km": 1.8,
+                "voltage_kv": 220,
+                "is_source": False,
+                "description": "Primary 220kV bulk feeder to South Kochi and industrial belt."
+            },
+            {
+                "id": "S3_Vyttila",
+                "name": "Vyttila 110kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 9.9628,
+                "lon": 76.3194,
+                "elevation_m": 5.0,
+                "plinth_m": 0.45,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 6.5,
+                "dist_river_km": 0.8,
+                "voltage_kv": 110,
+                "is_source": False,
+                "description": "Urban 110kV hub. Vulnerable when Chilavannoor backwater surges."
+            },
+            {
+                "id": "S4_Kaloor",
+                "name": "Kaloor 110kV GIS Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 9.9930,
+                "lon": 76.2971,
+                "elevation_m": 7.0,
+                "plinth_m": 0.6,
+                "trip_depth_m": 0.50,
+                "dist_coast_km": 5.2,
+                "dist_river_km": 1.5,
+                "voltage_kv": 110,
+                "is_source": False,
+                "description": "Gas-Insulated Switchgear. Highly flood resilient."
+            },
+            {
+                "id": "S5_Cheranallur",
+                "name": "Cheranallur 33/11kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 10.0460,
+                "lon": 76.2850,
+                "elevation_m": 2.2,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 7.0,
+                "dist_river_km": 0.3,
+                "voltage_kv": 33,
+                "is_source": False,
+                "description": "Low-lying estuarine substation. Submerges early, isolating Aster Medcity."
+            },
+            {
+                "id": "S6_Nettoor",
+                "name": "Nettoor 33/11kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 9.9250,
+                "lon": 76.3150,
+                "elevation_m": 2.5,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 7.2,
+                "dist_river_km": 0.4,
+                "voltage_kv": 33,
+                "is_source": False,
+                "description": "Low-lying tidal backwater node. Submerges, cutting power to VPS Lakeshore Hospital."
+            },
+            {
+                "id": "H1_Lakeshore",
+                "name": "VPS Lakeshore Multi-Speciality Hospital",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 9.9191,
+                "lon": 76.3191,
+                "elevation_m": 3.0,
+                "plinth_m": 0.3,
+                "trip_depth_m": 0.30,
+                "dist_coast_km": 7.5,
+                "dist_river_km": 0.5,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 68,
+                "generator_kw": 450.0,
+                "diesel_fuel_liters": 6000.0,
+                "burn_rate_lph": 112.5,
+                "dg_pad_elevation_m": 3.3,
+                "description": "650-bed quaternary hospital. Elevated on 3.0m fill, dry during moderate surge, but loses grid power when Nettoor 33kV trips!"
+            },
+            {
+                "id": "H2_Aster",
+                "name": "Aster Medcity Super-Speciality",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 10.0434,
+                "lon": 76.2777,
+                "elevation_m": 2.0,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 7.1,
+                "dist_river_km": 0.2,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 130,
+                "generator_kw": 600.0,
+                "diesel_fuel_liters": 5000.0,
+                "burn_rate_lph": 150.0,
+                "dg_pad_elevation_m": 2.4,
+                "description": "670-bed waterfront hospital. Water depth > 2.4m breaches basement generator alternator causing total blackout!"
+            },
+            {
+                "id": "O1_SouthernGas",
+                "name": "Southern Gas Ltd Cryogenic LMO Depot",
+                "type": "oxygen_plant",
+                "category": "logistics_source",
+                "lat": 10.0695,
+                "lon": 76.3050,
+                "elevation_m": 11.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 12.0,
+                "dist_river_km": 1.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Regional Liquid Medical Oxygen depot & vacuum-insulated tanker filling base."
+            },
+            {
+                "id": "F1_WillingdonFuel",
+                "name": "Willingdon Island Bulk Fuel Terminal",
+                "type": "fuel_terminal",
+                "category": "logistics_source",
+                "lat": 9.9480,
+                "lon": 76.2650,
+                "elevation_m": 2.1,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 2.0,
+                "dist_river_km": 0.5,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Coastal diesel tanker loading terminal. Vulnerable to direct surge inundation."
+            }
+        ],
+        "power_grid_edges": [
+            ("G1_Pallikkara", "S1_Kalamassery"),
+            ("S1_Kalamassery", "S2_Brahmapuram"),
+            ("S1_Kalamassery", "S4_Kaloor"),
+            ("S1_Kalamassery", "S5_Cheranallur"),
+            ("S2_Brahmapuram", "S3_Vyttila"),
+            ("S3_Vyttila", "S6_Nettoor"),
+            ("S6_Nettoor", "H1_Lakeshore"),
+            ("S5_Cheranallur", "H2_Aster"),
+            ("S4_Kaloor", "F1_WillingdonFuel")
+        ],
+        "logistics_corridors": [
+            {
+                "id": "CORR_KOCHI_LMO",
+                "name": "Southern Gas Depot -> VPS Lakeshore Hospital (LMO Replenishment)",
+                "cargo_type": "LIQUID_MEDICAL_OXYGEN",
+                "origin_id": "O1_SouthernGas",
+                "destination_id": "H1_Lakeshore",
+                "critical_clearance_depth_m": 0.20, # Low-slung cryogenic discharge valves
+                "distance_km": 16.5,
+                "nominal_travel_time_min": 25.0,
+                "choke_point_name": "Kundannoor Bridge Approach (NH-66 Bypass)",
+                "choke_elevation_m": 1.40,
+                "choke_dist_coast_km": 7.0,
+                "choke_dist_river_km": 0.4
+            },
+            {
+                "id": "CORR_KOCHI_DIESEL",
+                "name": "Willingdon Fuel Terminal -> Aster Medcity (Emergency Diesel)",
+                "cargo_type": "DIESEL_FUEL",
+                "origin_id": "F1_WillingdonFuel",
+                "destination_id": "H2_Aster",
+                "critical_clearance_depth_m": 0.45, # Heavy tanker air intake / bow wave limit
+                "distance_km": 14.0,
+                "nominal_travel_time_min": 22.0,
+                "choke_point_name": "Container Terminal Road Bridge Abutment",
+                "choke_elevation_m": 1.80,
+                "choke_dist_coast_km": 6.8,
+                "choke_dist_river_km": 0.3
+            }
+        ],
+        "scenarios": [
+            {
+                "id": "baseline_monsoon",
+                "name": "Normal Southwest Monsoon Runoff",
+                "ocean_surge_m": 0.40,
+                "river_inflow_m3s": 280.0,
+                "hours_to_landfall": 18.0,
+                "description": "Nominal tidal variation and river discharge. All grid switchgear dry and energized."
+            },
+            {
+                "id": "compound_cyclone_landfall",
+                "name": "Severe Cyclonic Landfall (Compound Bathtub)",
+                "ocean_surge_m": 1.85,
+                "river_inflow_m3s": 550.0,
+                "hours_to_landfall": 6.0,
+                "description": "Ocean surge throttles Cochin Barmouth; Periyar backs up inland. Nettoor 33kV trips, Lakeshore DG switches on, LMO window closes rapidly."
+            },
+            {
+                "id": "catastrophic_2018_deluge",
+                "name": "August 2018 Super-Deluge Peak",
+                "ocean_surge_m": 2.80,
+                "river_inflow_m3s": 950.0,
+                "hours_to_landfall": 3.0,
+                "description": "Multi-basin dam release coupled with Arabian Sea high-tide damming. Systemic transmission trip across multiple substations."
+            }
+        ]
+    },
+
+    # =========================================================================
+    # CORRIDOR 2: CHENNAI ADYAR-COOUM DELTA (BAY OF BENGAL)
+    # =========================================================================
+    "chennai": {
+        "id": "chennai",
+        "name": "Chennai Adyar-Cooum Delta Corridor",
+        "region": "Greater Chennai & Kanchipuram, Tamil Nadu",
+        "sea_basin": "Bay of Bengal",
+        "benchmark_event": "Cyclone Michaung (Dec 2023) & December 2015 Deluge",
+        "center_lat": 13.0102,
+        "center_lon": 80.2157,
+        "zoom": 11,
+        "hydrologic_params": {
+            "inlet_throat_area_m2": 2200.0,     # Adyar river mouth / Foreshore Estate throat
+            "inlet_discharge_coeff": 0.68,
+            "surge_decay_coeff": 0.14,
+            "backwater_length_km": 24.0,         # Adyar M1 backwater length to Chembarambakkam
+            "inlet_throat_name": "Adyar Estuary / Foreshore Sandbar",
+            "base_river_discharge_m3s": 120.0,
+            "nominal_surge_threshold_m": 1.10,
+            "floodplain_diffusion_km": 2.2,
+            "sar_specular_threshold_db": -3.5,
+            "parametric_faf_threshold": 0.20,
+            "contingency_fund_total_usd": 5000000
+        },
+        "assets": [
+            {
+                "id": "CH_G1_Sriperumbudur",
+                "name": "PGCIL Sriperumbudur 400/230kV Hub",
+                "type": "grid_source",
+                "category": "transmission",
+                "lat": 12.9810,
+                "lon": 79.9450,
+                "elevation_m": 35.0,
+                "plinth_m": 1.0,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 32.0,
+                "dist_river_km": 18.0,
+                "voltage_kv": 400,
+                "is_source": True,
+                "description": "Bulk 400kV feeding Chennai metro from national grid."
+            },
+            {
+                "id": "CH_S1_Koyambedu",
+                "name": "TANGEDCO Koyambedu 230kV Substation",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 13.0674,
+                "lon": 80.1942,
+                "elevation_m": 16.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 10.0,
+                "dist_river_km": 3.5,
+                "voltage_kv": 230,
+                "is_source": False,
+                "description": "Central transmission hub for western Chennai."
+            },
+            {
+                "id": "CH_S2_Manapakkam",
+                "name": "Manapakkam 230/110kV Substation",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 13.0180,
+                "lon": 80.1740,
+                "elevation_m": 8.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 11.0,
+                "dist_river_km": 0.5,
+                "voltage_kv": 230,
+                "is_source": False,
+                "description": "Adyar river basin transmission hub, historic flood failure point in 2015."
+            },
+            {
+                "id": "CH_S3_Guindy",
+                "name": "Guindy 110kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 13.0067,
+                "lon": 80.2025,
+                "elevation_m": 6.0,
+                "plinth_m": 0.45,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 8.0,
+                "dist_river_km": 1.2,
+                "voltage_kv": 110,
+                "is_source": False,
+                "description": "Distributes to south-central industrial and hospital zones."
+            },
+            {
+                "id": "CH_S4_Saidapet",
+                "name": "Saidapet 33/11kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 13.0205,
+                "lon": 80.2230,
+                "elevation_m": 3.2,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 5.5,
+                "dist_river_km": 0.3,
+                "voltage_kv": 33,
+                "is_source": False,
+                "description": "Directly adjacent to Adyar riverbank; submerges early under backwater surge."
+            },
+            {
+                "id": "CH_H1_MIOT",
+                "name": "MIOT International Quaternary Hospital",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 13.0198,
+                "lon": 80.1785,
+                "elevation_m": 4.2,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.35,
+                "dist_coast_km": 10.5,
+                "dist_river_km": 0.25,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 75,
+                "generator_kw": 480.0,
+                "diesel_fuel_liters": 5500.0,
+                "burn_rate_lph": 120.0,
+                "dg_pad_elevation_m": 4.6,
+                "description": "Quaternary hospital along Adyar river. Site of tragic generator flood failure in 2015."
+            },
+            {
+                "id": "CH_H2_ApolloVanagaram",
+                "name": "Apollo Speciality Hospital Vanagaram",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 13.0490,
+                "lon": 80.1460,
+                "elevation_m": 9.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 14.0,
+                "dist_river_km": 2.8,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 80,
+                "generator_kw": 500.0,
+                "diesel_fuel_liters": 6000.0,
+                "burn_rate_lph": 125.0,
+                "dg_pad_elevation_m": 9.5,
+                "description": "Critical care hospital on higher ground; vulnerable to power grid disconnection."
+            },
+            {
+                "id": "CH_O1_EnnoreOxygen",
+                "name": "Ennore Cryogenic Liquid Medical Oxygen Plant",
+                "type": "oxygen_plant",
+                "category": "logistics_source",
+                "lat": 13.2100,
+                "lon": 80.3150,
+                "elevation_m": 8.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 3.0,
+                "dist_river_km": 4.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Bulk cryogenic oxygen generation facility supplying northern and central Chennai."
+            },
+            {
+                "id": "CH_F1_ManaliRefinery",
+                "name": "CPCL Manali Bulk Fuel Terminal",
+                "type": "fuel_terminal",
+                "category": "logistics_source",
+                "lat": 13.1670,
+                "lon": 80.2650,
+                "elevation_m": 6.5,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 5.0,
+                "dist_river_km": 3.5,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Major diesel and heavy distillate terminal for emergency services."
+            }
+        ],
+        "power_grid_edges": [
+            ("CH_G1_Sriperumbudur", "CH_S1_Koyambedu"),
+            ("CH_G1_Sriperumbudur", "CH_S2_Manapakkam"),
+            ("CH_S2_Manapakkam", "CH_S3_Guindy"),
+            ("CH_S3_Guindy", "CH_S4_Saidapet"),
+            ("CH_S4_Saidapet", "CH_H1_MIOT"),
+            ("CH_S1_Koyambedu", "CH_H2_ApolloVanagaram")
+        ],
+        "logistics_corridors": [
+            {
+                "id": "CORR_CHENNAI_LMO",
+                "name": "Ennore Plant -> MIOT International (LMO Replenishment)",
+                "cargo_type": "LIQUID_MEDICAL_OXYGEN",
+                "origin_id": "CH_O1_EnnoreOxygen",
+                "destination_id": "CH_H1_MIOT",
+                "critical_clearance_depth_m": 0.20,
+                "distance_km": 26.0,
+                "nominal_travel_time_min": 40.0,
+                "choke_point_name": "Kathipara Junction / Mount-Poonamallee Road Choke",
+                "choke_elevation_m": 1.60,
+                "choke_dist_coast_km": 8.5,
+                "choke_dist_river_km": 0.4
+            },
+            {
+                "id": "CORR_CHENNAI_DIESEL",
+                "name": "Manali Terminal -> Apollo Vanagaram (Emergency Diesel)",
+                "cargo_type": "DIESEL_FUEL",
+                "origin_id": "CH_F1_ManaliRefinery",
+                "destination_id": "CH_H2_ApolloVanagaram",
+                "critical_clearance_depth_m": 0.45,
+                "distance_km": 22.0,
+                "nominal_travel_time_min": 35.0,
+                "choke_point_name": "Inner Ring Road Padi Flyover Underpass",
+                "choke_elevation_m": 2.40,
+                "choke_dist_coast_km": 11.0,
+                "choke_dist_river_km": 1.5
+            }
+        ],
+        "scenarios": [
+            {
+                "id": "chennai_cyclone_michaung",
+                "name": "Cyclone Michaung Extreme Confluence (Dec 2023)",
+                "ocean_surge_m": 1.80,
+                "river_inflow_m3s": 520.0,
+                "hours_to_landfall": 5.0,
+                "description": "High surge in Bay of Bengal blocks Adyar discharge; Saidapet and Manapakkam substations trip."
+            }
+        ]
+    },
+
+    # =========================================================================
+    # CORRIDOR 3: MUMBAI MITHI-MAHIM ESTUARY (ARABIAN SEA)
+    # =========================================================================
+    "mumbai": {
+        "id": "mumbai",
+        "name": "Mumbai Mithi River & Mahim Creek Corridor",
+        "region": "Mumbai City & Suburban, Maharashtra",
+        "sea_basin": "Arabian Sea",
+        "benchmark_event": "Monsoon Extreme Tidal Confluence & 2005 Deluge Baseline",
+        "center_lat": 19.0558,
+        "center_lon": 72.8550,
+        "zoom": 12,
+        "hydrologic_params": {
+            "inlet_throat_area_m2": 1800.0,     # Mahim Bay / Mithi River outlet throat
+            "inlet_discharge_coeff": 0.65,
+            "surge_decay_coeff": 0.16,
+            "backwater_length_km": 16.0,         # Mithi length scale to Vihar overflow
+            "inlet_throat_name": "Mahim Causeway Bridge Choke",
+            "base_river_discharge_m3s": 150.0,
+            "nominal_surge_threshold_m": 1.30,
+            "floodplain_diffusion_km": 1.8,
+            "sar_specular_threshold_db": -3.5,
+            "parametric_faf_threshold": 0.20,
+            "contingency_fund_total_usd": 5000000
+        },
+        "assets": [
+            {
+                "id": "MU_G1_Kalwa",
+                "name": "Tata Power / MSETCL Kalwa 400kV Grid Hub",
+                "type": "grid_source",
+                "category": "transmission",
+                "lat": 19.1980,
+                "lon": 73.0020,
+                "elevation_m": 28.0,
+                "plinth_m": 1.0,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 20.0,
+                "dist_river_km": 15.0,
+                "voltage_kv": 400,
+                "is_source": True,
+                "description": "Bulk 400kV transmission hub feeding Mumbai island and suburbs."
+            },
+            {
+                "id": "MU_S1_Dharavi",
+                "name": "Dharavi 220/110kV Receiving Station",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 19.0430,
+                "lon": 72.8540,
+                "elevation_m": 5.0,
+                "plinth_m": 0.45,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 2.5,
+                "dist_river_km": 0.4,
+                "voltage_kv": 220,
+                "is_source": False,
+                "description": "Crucial 220kV transmission hub feeding central Mumbai hospitals."
+            },
+            {
+                "id": "MU_S2_Kurla",
+                "name": "Kurla 110/33kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 19.0680,
+                "lon": 72.8790,
+                "elevation_m": 3.2,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 5.0,
+                "dist_river_km": 0.3,
+                "voltage_kv": 110,
+                "is_source": False,
+                "description": "Low-lying Mithi basin substation; submerges early when tidal damming occurs."
+            },
+            {
+                "id": "MU_S3_BKC",
+                "name": "Bandra-Kurla Complex 110kV GIS",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 19.0650,
+                "lon": 72.8680,
+                "elevation_m": 4.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 3.8,
+                "dist_river_km": 0.5,
+                "voltage_kv": 110,
+                "is_source": False,
+                "description": "Supplies BKC financial district and surrounding healthcare facilities."
+            },
+            {
+                "id": "MU_H1_Sion",
+                "name": "Lokmanya Tilak Municipal General (Sion Hospital)",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 19.0358,
+                "lon": 72.8601,
+                "elevation_m": 4.8,
+                "plinth_m": 0.3,
+                "trip_depth_m": 0.35,
+                "dist_coast_km": 4.0,
+                "dist_river_km": 0.35,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 90,
+                "generator_kw": 550.0,
+                "diesel_fuel_liters": 7000.0,
+                "burn_rate_lph": 137.5,
+                "dg_pad_elevation_m": 5.1,
+                "description": "Premier public trauma and tertiary hospital. Subject to power loss when Kurla/Dharavi fail."
+            },
+            {
+                "id": "MU_H2_Lilavati",
+                "name": "Lilavati Hospital & Research Centre",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 19.0512,
+                "lon": 72.8290,
+                "elevation_m": 6.5,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 0.8,
+                "dist_river_km": 2.2,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 60,
+                "generator_kw": 400.0,
+                "diesel_fuel_liters": 5000.0,
+                "burn_rate_lph": 100.0,
+                "dg_pad_elevation_m": 7.0,
+                "description": "Western coastal hospital; vulnerable to transmission grid islanding."
+            },
+            {
+                "id": "MU_O1_ChemburOxygen",
+                "name": "Chembur Cryogenic Medical Gas Depot",
+                "type": "oxygen_plant",
+                "category": "logistics_source",
+                "lat": 19.0550,
+                "lon": 72.9050,
+                "elevation_m": 9.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 5.5,
+                "dist_river_km": 3.2,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Central medical gas cylinder and tanker replenishment base."
+            },
+            {
+                "id": "MU_F1_SewriFuel",
+                "name": "HPCL/BPCL Sewri Bulk Fuel Terminal",
+                "type": "fuel_terminal",
+                "category": "logistics_source",
+                "lat": 18.9950,
+                "lon": 72.8550,
+                "elevation_m": 4.5,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 1.0,
+                "dist_river_km": 4.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "South Mumbai fuel distribution depot for emergency fleet."
+            }
+        ],
+        "power_grid_edges": [
+            ("MU_G1_Kalwa", "MU_S1_Dharavi"),
+            ("MU_S1_Dharavi", "MU_S2_Kurla"),
+            ("MU_S1_Dharavi", "MU_S3_BKC"),
+            ("MU_S2_Kurla", "MU_H1_Sion"),
+            ("MU_S3_BKC", "MU_H2_Lilavati")
+        ],
+        "logistics_corridors": [
+            {
+                "id": "CORR_MUMBAI_LMO",
+                "name": "Chembur Depot -> Sion Hospital (LMO Replenishment)",
+                "cargo_type": "LIQUID_MEDICAL_OXYGEN",
+                "origin_id": "MU_O1_ChemburOxygen",
+                "destination_id": "MU_H1_Sion",
+                "critical_clearance_depth_m": 0.20,
+                "distance_km": 6.5,
+                "nominal_travel_time_min": 15.0,
+                "choke_point_name": "Sion-Bandra Link Road Mithi Bridge Approach",
+                "choke_elevation_m": 1.70,
+                "choke_dist_coast_km": 3.5,
+                "choke_dist_river_km": 0.25
+            },
+            {
+                "id": "CORR_MUMBAI_DIESEL",
+                "name": "Sewri Terminal -> Lilavati Hospital (Emergency Diesel)",
+                "cargo_type": "DIESEL_FUEL",
+                "origin_id": "MU_F1_SewriFuel",
+                "destination_id": "MU_H2_Lilavati",
+                "critical_clearance_depth_m": 0.45,
+                "distance_km": 11.0,
+                "nominal_travel_time_min": 20.0,
+                "choke_point_name": "Western Express Highway Kalanagar Junction",
+                "choke_elevation_m": 2.50,
+                "choke_dist_coast_km": 2.2,
+                "choke_dist_river_km": 1.0
+            }
+        ],
+        "scenarios": [
+            {
+                "id": "mumbai_spring_tide_deluge",
+                "name": "Monsoon Spring High Tide (+4.8m CD) + Cloudburst",
+                "ocean_surge_m": 2.10,
+                "river_inflow_m3s": 600.0,
+                "hours_to_landfall": 4.0,
+                "description": "Tidal lock at Mahim Creek causes backwater inundation in Kurla; Sion hospital shifts to emergency diesel."
+            }
+        ]
+    },
+
+    # =========================================================================
+    # CORRIDOR 4: ODISHA MAHANADI DELTA & PARADIP (BAY OF BENGAL)
+    # =========================================================================
+    "odisha": {
+        "id": "odisha",
+        "name": "Odisha Mahanadi Delta & Paradip Coast Corridor",
+        "region": "Jagatsinghpur & Kendrapara, Odisha",
+        "sea_basin": "Bay of Bengal",
+        "benchmark_event": "Bay of Bengal Super Cyclone Inundation Dynamics",
+        "center_lat": 20.2850,
+        "center_lon": 86.6450,
+        "zoom": 11,
+        "hydrologic_params": {
+            "inlet_throat_area_m2": 7500.0,     # Mahanadi estuarine mouth at Paradip
+            "inlet_discharge_coeff": 0.75,
+            "surge_decay_coeff": 0.12,
+            "backwater_length_km": 45.0,         # Mahanadi wide deltaic backwater reach
+            "inlet_throat_name": "Mahanadi False Point Estuary",
+            "base_river_discharge_m3s": 400.0,
+            "nominal_surge_threshold_m": 1.40,
+            "floodplain_diffusion_km": 4.5,
+            "sar_specular_threshold_db": -3.5,
+            "parametric_faf_threshold": 0.20,
+            "contingency_fund_total_usd": 5000000
+        },
+        "assets": [
+            {
+                "id": "OD_G1_Cuttack",
+                "name": "PGCIL Cuttack 400kV Grid Hub",
+                "type": "grid_source",
+                "category": "transmission",
+                "lat": 20.4850,
+                "lon": 85.8820,
+                "elevation_m": 22.0,
+                "plinth_m": 1.0,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 75.0,
+                "dist_river_km": 2.0,
+                "voltage_kv": 400,
+                "is_source": True,
+                "description": "Bulk transmission node on elevated Cuttack ridge."
+            },
+            {
+                "id": "OD_S1_Jagatsinghpur",
+                "name": "OPTCL Jagatsinghpur 220kV Hub",
+                "type": "substation",
+                "category": "transmission",
+                "lat": 20.2650,
+                "lon": 86.1680,
+                "elevation_m": 12.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 35.0,
+                "dist_river_km": 1.5,
+                "voltage_kv": 220,
+                "is_source": False,
+                "description": "Central transmission feeder to coastal delta."
+            },
+            {
+                "id": "OD_S2_Paradip",
+                "name": "Paradip 220/33kV Port Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 20.2950,
+                "lon": 86.6750,
+                "elevation_m": 3.5,
+                "plinth_m": 0.45,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 2.5,
+                "dist_river_km": 0.8,
+                "voltage_kv": 220,
+                "is_source": False,
+                "description": "Coastal port substation subjected to direct storm surge."
+            },
+            {
+                "id": "OD_S3_Ersama",
+                "name": "Ersama 33/11kV Substation",
+                "type": "substation",
+                "category": "distribution",
+                "lat": 20.1980,
+                "lon": 86.4420,
+                "elevation_m": 2.8,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 6.0,
+                "dist_river_km": 0.5,
+                "voltage_kv": 33,
+                "is_source": False,
+                "description": "Low-lying coastal delta node; historic vulnerability during supercyclones."
+            },
+            {
+                "id": "OD_H1_ParadipPort",
+                "name": "Paradip Port Trust Hospital",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 20.2880,
+                "lon": 86.6620,
+                "elevation_m": 4.0,
+                "plinth_m": 0.35,
+                "trip_depth_m": 0.35,
+                "dist_coast_km": 2.0,
+                "dist_river_km": 0.6,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 40,
+                "generator_kw": 250.0,
+                "diesel_fuel_liters": 3000.0,
+                "burn_rate_lph": 62.5,
+                "dg_pad_elevation_m": 4.4,
+                "description": "Port critical care hospital. Isolates when Paradip 220kV trips."
+            },
+            {
+                "id": "OD_H2_Jagatsinghpur",
+                "name": "District Headquarters Hospital Jagatsinghpur",
+                "type": "hospital",
+                "category": "healthcare",
+                "lat": 20.2610,
+                "lon": 86.1720,
+                "elevation_m": 13.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 36.0,
+                "dist_river_km": 2.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "icu_beds": 50,
+                "generator_kw": 300.0,
+                "diesel_fuel_liters": 4000.0,
+                "burn_rate_lph": 75.0,
+                "dg_pad_elevation_m": 13.5,
+                "description": "Inland district hospital serving as regional triage center."
+            },
+            {
+                "id": "OD_O1_BhubaneswarOxygen",
+                "name": "Linde Gas Central Medical Oxygen Depot",
+                "type": "oxygen_plant",
+                "category": "logistics_source",
+                "lat": 20.3120,
+                "lon": 85.8250,
+                "elevation_m": 35.0,
+                "plinth_m": 0.5,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 60.0,
+                "dist_river_km": 8.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Central cryogenic oxygen production base for coastal Odisha."
+            },
+            {
+                "id": "OD_F1_IOCLRefinery",
+                "name": "IOCL Paradip Coastal Refinery & Fuel Terminal",
+                "type": "fuel_terminal",
+                "category": "logistics_source",
+                "lat": 20.2450,
+                "lon": 86.6210,
+                "elevation_m": 4.2,
+                "plinth_m": 0.4,
+                "trip_depth_m": 0.40,
+                "dist_coast_km": 3.0,
+                "dist_river_km": 1.0,
+                "voltage_kv": 11,
+                "is_source": False,
+                "description": "Mega refinery distributing diesel to emergency response fleets."
+            }
+        ],
+        "power_grid_edges": [
+            ("OD_G1_Cuttack", "OD_S1_Jagatsinghpur"),
+            ("OD_S1_Jagatsinghpur", "OD_S2_Paradip"),
+            ("OD_S2_Paradip", "OD_S3_Ersama"),
+            ("OD_S3_Ersama", "OD_H1_ParadipPort"),
+            ("OD_S1_Jagatsinghpur", "OD_H2_Jagatsinghpur")
+        ],
+        "logistics_corridors": [
+            {
+                "id": "CORR_ODISHA_LMO",
+                "name": "Bhubaneswar Depot -> Paradip Port Hospital (LMO Replenishment)",
+                "cargo_type": "LIQUID_MEDICAL_OXYGEN",
+                "origin_id": "OD_O1_BhubaneswarOxygen",
+                "destination_id": "OD_H1_ParadipPort",
+                "critical_clearance_depth_m": 0.20,
+                "distance_km": 85.0,
+                "nominal_travel_time_min": 120.0,
+                "choke_point_name": "SH-12 Kujang Bridge Causeways",
+                "choke_elevation_m": 1.80,
+                "choke_dist_coast_km": 14.0,
+                "choke_dist_river_km": 0.8
+            },
+            {
+                "id": "CORR_ODISHA_DIESEL",
+                "name": "IOCL Paradip -> Jagatsinghpur Hospital (Emergency Diesel)",
+                "cargo_type": "DIESEL_FUEL",
+                "origin_id": "OD_F1_IOCLRefinery",
+                "destination_id": "OD_H2_Jagatsinghpur",
+                "critical_clearance_depth_m": 0.45,
+                "distance_km": 42.0,
+                "nominal_travel_time_min": 55.0,
+                "choke_point_name": "Cuttack-Paradip Road Birupa Confluence",
+                "choke_elevation_m": 2.80,
+                "choke_dist_coast_km": 25.0,
+                "choke_dist_river_km": 1.2
+            }
+        ],
+        "scenarios": [
+            {
+                "id": "odisha_supercyclone_surge",
+                "name": "Category 5 Supercyclone (+3.2m Surge)",
+                "ocean_surge_m": 3.20,
+                "river_inflow_m3s": 880.0,
+                "hours_to_landfall": 6.0,
+                "description": "Massive cyclonic surge pushes up Mahanadi estuary; Paradip port grid isolates."
+            }
+        ]
+    }
+}
+
+
+def get_corridor(corridor_id: str = "kochi") -> Dict[str, Any]:
+    """Retrieves full telemetry, assets, and grid topology for a corridor."""
+    cid = corridor_id.lower().strip()
+    if cid not in CORRIDORS:
+        raise KeyError(f"Corridor '{corridor_id}' not found. Available: {list(CORRIDORS.keys())}")
+    return CORRIDORS[cid]
+
+
+def list_available_corridors() -> List[Dict[str, str]]:
+    """Returns metadata summary of all 4 Indian coastal corridors."""
+    return [
+        {
+            "id": c["id"],
+            "name": c["name"],
+            "region": c["region"],
+            "sea_basin": c["sea_basin"],
+            "benchmark_event": c["benchmark_event"]
+        }
+        for c in CORRIDORS.values()
+    ]
+
+
+# Backward compatibility aliases for primary benchmark (Kochi)
+PRIMARY_CORRIDOR = CORRIDORS["kochi"]
+HYDROLOGIC_PARAMETERS = PRIMARY_CORRIDOR["hydrologic_params"]
+CRITICAL_ASSETS = PRIMARY_CORRIDOR["assets"]
+POWER_GRID_EDGES = PRIMARY_CORRIDOR["power_grid_edges"]
+LOGISTICS_CORRIDORS = PRIMARY_CORRIDOR["logistics_corridors"]
+SCENARIOS = PRIMARY_CORRIDOR["scenarios"]
