@@ -251,10 +251,12 @@ ggl/
 │   │       ├── oracle_agent.py         # Sentinel-1 SAR change detection & liquidity voucher
 │   │       └── apex_agent.py           # Incident Commander multi-objective supervisor
 │   ├── tests/
-│   │   ├── test_hydro.py
-│   │   ├── test_grid_dag.py
-│   │   ├── test_logistics.py
-│   │   └── test_vision_fallback.py
+│   │   ├── test_multi_corridor_dataset.py
+│   │   ├── test_compound_hydro.py
+│   │   ├── test_grid_cascade.py
+│   │   ├── test_logistics_reachability.py
+│   │   ├── test_dod_simulation.py
+│   │   └── test_swarm_and_api.py
 │   ├── requirements.txt
 │   └── .env.example
 ├── frontend/
@@ -265,11 +267,11 @@ ggl/
 │   │   ├── components/
 │   │   │   ├── Header.jsx              # Status badges, telemetry ticker, pitch mode switch
 │   │   │   ├── TacticalMap.jsx         # Leaflet/Canvas digital twin with water & power layers
-│   │   │   ├── ControlSliders.jsx      # Surge (m), Inflow (m³/s), Landfall (hrs), Scenarios
+│   │   │   ├── ControlPanel.jsx        # Surge (m), Inflow (m³/s), Landfall (hrs), 1-Click Scenarios
 │   │   │   ├── DarkGridMatrix.jsx      # Cascade status, tripped breakers, generator fuel gauges
 │   │   │   ├── LogisticsCountdown.jsx  # Time-to-Submersion clocks for LMO & Diesel convoys
-│   │   │   ├── GeminiInspectorCard.jsx # Spatial tile inspector & structured geotechnical directives
-│   │   │   ├── ParametricOracleCard.jsx# SAR backscatter delta index & instant payout certificate
+│   │   │   ├── GeminiInspectorModal.jsx# Spatial tile inspector & structured geotechnical directives
+│   │   │   ├── ParametricOracleModal.jsx# SAR backscatter delta index & instant payout certificate
 │   │   │   ├── SwarmMissionFeed.jsx    # Real-time incident command agent dialogue
 │   │   │   └── PitchGuideModal.jsx     # Interactive 3-minute hackathon pitch flow
 │   ├── package.json
