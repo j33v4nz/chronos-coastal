@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #080c14;
+    color: #f1f5f9;
+  }
+}
+
+/* Custom Tactical Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d1322;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a243b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff;
+}
+
+/* Radar pulse animation */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.radar-glow {
+  animation: radar-pulse 2s infinite ease-in-out;
+}
+
+/* Custom Leaflet Dark Fix */
+.leaflet-container {
+  background: #080c14 !important;
+  font-family: inherit;
+}
+.leaflet-popup-content-wrapper {
+  background: #0d1322 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #1a243b !important;
+  box-shadow: 0 8px 32px rgba(0, 240, 255, 0.15) !important;
+  border-radius: 8px !important;
+}
+.leaflet-popup-tip {
+  background: #0d1322 !important;
+}
