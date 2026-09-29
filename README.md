@@ -136,8 +136,23 @@ Current disaster response tools fail because they model flooding as an isolated 
 
 ---
 
-## 📍 Grounded Testbed: Kochi–Alappuzha Estuarine Corridor (Kerala)
+## 🇮🇳 Pan-India National Multi-Corridor Architecture
 
+To serve national disaster resilience mandates (NDMA, MoES, INCOIS, CWC, and GRID-INDIA), **CHRONOS-COASTAL** operates on a generalized, geography-agnostic pipeline. While the hydrodynamic backwater formulas and SAR backscatter thresholds were empirically calibrated against the ground-truth telemetry of the **2018 Kerala Deluge**, the system seamlessly ingests standard DEM rasters, OpenStreetMap river/road networks, and power grid topologies across India's **7,516 km coastline**.
+
+```
+                           [ PAN-INDIA COASTAL SHIELD ]
+                                        │
+          ┌─────────────────────────────┼─────────────────────────────┐
+          ▼                             ▼                             ▼
+   [ ARABIAN SEA ]             [ BAY OF BENGAL ]             [ TIDAL MEGACITY ]
+   📍 Kochi-Vembanad            📍 Chennai Adyar-Cooum        📍 Mumbai Mithi-Mahim
+   • Primary Benchmark          • Cyclone Michaung 2023       • Urban tidal lock
+   • Periyar / Muvattupuzha     • Chembarambakkam release     • BKC / Sion Hospital
+   • 2018 Ground Truth Deluge   • MIOT / Airport backwater    • Dharavi 220kV Hub
+```
+
+### Corridor 1: Kochi–Alappuzha Estuarine Corridor (Primary Calibrated Benchmark)
 Calibrated against the catastrophic August 2018 Deluge ($\Sigma Q > 16,000\,\text{m}^3/\text{s}$, $Q_{\text{Periyar}} = 8,800\,\text{m}^3/\text{s}$, $Q_{\text{Muvattupuzha}} = 2,412\,\text{m}^3/\text{s}$, Cochin Barmouth $A_{\text{throat}} = 4,800\,\text{m}^2$):
 
 | Asset ID | Infrastructure Name | Coordinates | Elevation | Plinth / Trip Depth | Operational Role & Vulnerability |
@@ -154,6 +169,29 @@ Calibrated against the catastrophic August 2018 Deluge ($\Sigma Q > 16,000\,\tex
 | `O1_SouthernGas`| Southern Gas Ltd LMO Plant (Eloor) | `10.0695, 76.3050` | 11.0 m | 0.5 m / 0.4 m | Cryogenic Liquid Medical Oxygen storage & cylinder filling depot. |
 | `R1_Kundannoor` | Kundannoor Bridge Approach (NH-66) | `9.9323, 76.3180` | 2.0 m | Choke: 0.2m (LMO) / 0.45m (Fuel) | Critical connection linking Kochi city to Lakeshore Hospital. |
 | `R2_Container` | Container Terminal Road (Cheranallur)| `10.0450, 76.2820` | 2.5 m | Choke: 0.2m (LMO) / 0.45m (Fuel) | Elevated arterial bypass to Aster Medcity. |
+
+---
+
+### Corridor 2: Chennai Adyar–Cooum Delta (Tamil Nadu / Bay of Bengal)
+Ground-truth mapped from the **December 2015 Deluge** and **Cyclone Michaung (Dec 2023)** ($Q_{\text{Adyar}} > 3,100\,\text{m}^3/\text{s}$ discharge meeting a $+1.8\text{m}$ Bay of Bengal storm surge):
+* **Hydraulic Reality**: Chembarambakkam reservoir releases create an extreme flow velocity that cannot empty past the narrow Adyar estuarine bar at Foreshore Estate due to tidal damming, raising water levels $+2.2\text{m}$ inland.
+* **Cascading Grid Failure**: Inundation of the **Manapakkam 230kV / Guindy 110kV substations** trips the transmission loop, knocking out grid power to **MIOT International Hospital** and **Apollo Speciality Vanagaram**.
+* **Logistics Severance**: The **Kathipara Junction & Mount-Poonamallee road corridor** submerges to $0.65\text{m}$, cutting off liquid oxygen and diesel supply to MIOT ICU wards (the exact tragic event where 18 ICU patients died in 2015).
+
+---
+
+### Corridor 3: Mumbai Mithi River & Mahim Creek (Maharashtra / Arabian Sea)
+Ground-truth mapped from extreme Arabian Sea monsoonal high-tides ($+4.8\text{m}$ CD) coupled with $>300\,\text{mm/day}$ Sahyadri runoff:
+* **Hydraulic Reality**: Arabian Sea astronomical high tide enters Mahim Creek, forming a hydraulic wall that stops the Mithi River from discharging, drowning Kurla, Dharavi, and Kalina.
+* **Cascading Grid Failure**: **Dharavi 220kV Hub (Tata Power/Adani)** experiences basements flooding, triggering ANSI 21 distance relays isolating secondary distribution to **Lokmanya Tilak Municipal General Hospital (Sion Hospital)**.
+* **Logistics Severance**: **Western Express Highway / Sion-Bandra Link Road** drowns, isolating central liquid oxygen tankers at Chembur from reaching South Mumbai trauma centers.
+
+---
+
+### Corridor 4: Odisha Mahanadi Delta & Paradip Coast (Odisha / Bay of Bengal)
+Ground-truth mapped from Bay of Bengal cyclonic landfalls (e.g. Cyclone Fani, Super Cyclone 1999):
+* **Hydraulic Reality**: Torrential runoff from the Hirakud dam corridor arrives at the Kendrapara-Jagatsinghpur deltaic split simultaneously with a $+3.5\text{m}$ cyclonic storm surge.
+* **Cascading Grid & Industrial Cascade**: Paradip Port coastal refinery fuel lines trip, cutting automated supply to eastern regional medical generator networks.
 
 ---
 
@@ -185,9 +223,10 @@ The architecture was peer-reviewed by an independent 5-member multidisciplinary 
 > *(Click 'Inspect with Gemini 3.7 Flash').*  
 > *"Instead of passing raw text, Chronos passes a 3-band composite false-color GIS tensor combining DEM slope gradient, SAR backscatter saturation, and infrastructure pads directly into Gemini 3.7 Flash's Vision Transformer. Watch the live thought stream: Gemini inspects the riverbank, detects slope instability along the feeder ramp, and flags that Kundannoor Bridge will submerge in 87 minutes. The Life-Support Logistics Agent immediately issues a priority directive: dispatch the diesel tanker from Southern Oxygen Depot now before the access corridor closes!"*
 
-### 2:15 – 3:00 | Parametric Proof Oracle & Impact
+### 2:15 – 3:00 | Parametric Proof Oracle & Pan-India Scale
 > *(Click 'Verify Parametric Oracle').*  
-> *"Chronos doesn't stop at prediction—it automates disaster liquidity. Sentinel-1 SAR change detection confirms a backscatter drop of -3.8dB over 24% of the estuarine basin. The Parametric Oracle verifies the threshold and executes an instant $5M contingency liquidity release to the municipal emergency pool within minutes. Chronos doesn't just show where water goes—it shows where life support fails and gives commanders the operational runway to save lives. Thank you."*
+> *"Chronos doesn't stop at prediction—it automates disaster liquidity. Sentinel-1 SAR change detection confirms a backscatter drop of -3.8dB over 24% of the estuarine basin. The Parametric Oracle verifies the threshold and executes an instant $5M contingency liquidity release to the municipal emergency pool within minutes.*  
+> *Crucially: this is not a one-city toy. We benchmarked our physics on Kochi's 2018 ground truth, but our pipeline is geography-agnostic. With one click on our corridor switcher, the exact same engine models the Adyar river in Chennai, the Mithi creek in Mumbai, and the Mahanadi delta in Odisha—delivering an operational shield for India's entire 7,516 km coastline. Thank you."*
 
 ---
 
