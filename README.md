@@ -1,6 +1,8 @@
 # 🌊 CHRONOS-COASTAL
 ### Physics-Coupled Compound Inundation & Critical Infrastructure Triaging Swarm
 
+[![CI Pipeline](https://github.com/j33v4nz/ggl/actions/workflows/ci.yml/badge.svg)](https://github.com/j33v4nz/ggl/actions/workflows/ci.yml)
+[![Model Benchmark](https://img.shields.io/badge/Model_Benchmark-99.39%20%2F%20100-brightgreen)](#-model-evaluation-calibration--fine-tuning-suite)
 [![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Google GenAI SDK](https://img.shields.io/badge/Google_GenAI-Gemini_3.7_Flash-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)

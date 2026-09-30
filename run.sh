@@ -17,20 +17,27 @@ echo "======================================================================"
 
 # 1. Environment initialization
 if [ ! -f "backend/.env" ]; then
-    echo "[+] Initializing backend/.env from backend/.env.example..."
-    cat << 'EOF' > backend/.env
-# CHRONOS-COASTAL Environment Configuration
-# Optional: Google GenAI API Key for Gemini 3.7 / 2.5 Flash
-# If left empty, system automatically engages the zero-downtime synthetic geotechnical engine
+    if [ -f "backend/.env.example" ]; then
+        echo "[+] Initializing backend/.env from backend/.env.example..."
+        cp backend/.env.example backend/.env
+    else
+        echo "[+] Creating default backend/.env..."
+        cat << 'EOF' > backend/.env
 GEMINI_API_KEY=
-
 PORT=8000
 HOST=0.0.0.0
 ENVIRONMENT=production
 EOF
+    fi
 fi
 
-# 2. Check and build frontend if needed
+# 2. Check and install Python dependencies if needed
+if ! python3 -c "import fastapi, uvicorn, pydantic, networkx, numpy, scipy, PIL, websockets" &>/dev/null; then
+    echo "[+] Installing backend dependencies from backend/requirements.txt..."
+    python3 -m pip install -q -r backend/requirements.txt
+fi
+
+# 3. Check and build frontend if needed
 if [ ! -d "frontend/dist" ]; then
     echo "[+] Building frontend production bundle..."
     cd frontend
@@ -42,10 +49,10 @@ if [ ! -d "frontend/dist" ]; then
     cd "$PROJECT_ROOT"
 fi
 
-# 3. Export Python path
+# 4. Export Python path
 export PYTHONPATH="$PROJECT_ROOT/backend:$PYTHONPATH"
 
-# 4. Port configuration
+# 5. Port configuration
 PORT=${PORT:-8000}
 HOST=${HOST:-0.0.0.0}
 
@@ -55,6 +62,7 @@ echo "📍 Mission Control Dashboard: http://localhost:${PORT}"
 echo "📡 Swarm Priority WebSocket:  ws://localhost:${PORT}/ws/tactical-feed"
 echo "📖 OpenAPI Documentation:     http://localhost:${PORT}/docs"
 echo "🎙️ Live Hackathon Pitch Mode: Available directly in UI top-bar"
+echo "📊 Model Evals & Benchmarks:  Available in UI top-bar & http://localhost:${PORT}/api/evals/results"
 echo "======================================================================"
 echo ""
 
