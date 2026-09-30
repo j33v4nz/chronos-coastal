@@ -1,6 +1,6 @@
 """
-CHRONOS-COASTAL Parametric Proof Oracle Agent
-Automated Sentinel-1 SAR change-detection index and cryptographic emergency contingency liquidity release.
+CHRONOS-COASTAL Parametric Scenario Oracle
+Uses a modeled SAR proxy to generate a simulated emergency voucher.
 """
 
 import hashlib
@@ -15,10 +15,8 @@ from app.dataset import get_corridor
 
 class ParametricOracleAgent:
     """
-    Parametric Disaster Liquidity Oracle.
-    Analyzes Sentinel-1 SAR radar backscatter attenuation (Delta sigma0 <= -3.5 dB).
-    When the verified Flooded Area Fraction (FAF) crosses the 20% municipal threshold,
-    it automatically generates an immutable, cryptographically sealed $5M liquidity release voucher.
+    Parametric scenario evaluator. The SAR delta is inferred from simulated
+    flooding, not read from a satellite product. No funds are transferred.
     """
 
     def __init__(self, bus: TacticalEventBus, corridor_id: str = "kochi"):
@@ -45,8 +43,7 @@ class ParametricOracleAgent:
         threshold_faf = params.get("parametric_faf_threshold", 0.20)
         fund_total_usd = params.get("contingency_fund_total_usd", 5000000.0)
 
-        # Calculate SAR radar backscatter drop based on compound water accumulation
-        # Open water specular reflection creates characteristic 3 to 6 dB backscatter drop
+        # Synthetic SAR proxy based on simulated water accumulation.
         flooded_fraction = hydro_data.get("flooded_fraction", 0.0)
         sar_delta_db = round(-3.5 - (flooded_fraction * 2.8) - (ocean_surge_m * 0.4), 2)
 

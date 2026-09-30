@@ -56,7 +56,7 @@ class LifeSupportLogisticsAgent:
             cargo = r["cargo_type"]
             choke = r["choke_point_name"]
 
-            if dep_min <= 0.0 or r["is_currently_submerged"]:
+            if r["is_currently_submerged"]:
                 await self.bus.publish(SwarmMessage(
                     sender="LifeSupportLogisticsAgent",
                     topic="alert.corridor_severed",
@@ -69,7 +69,20 @@ class LifeSupportLogisticsAgent:
                         "message": f"CORRIDOR SEVERED: {choke} submerged past {r['critical_clearance_depth_m']}m. {cargo} convoy route blocked!"
                     }
                 ))
-            elif dep_min <= 60.0:
+            elif dep_min is not None and dep_min <= 0.0:
+                await self.bus.publish(SwarmMessage(
+                    sender="LifeSupportLogisticsAgent",
+                    topic="alert.departure_window_closed",
+                    priority=Priority.CRITICAL,
+                    payload={
+                        "route_id": r["corridor_id"],
+                        "cargo_type": cargo,
+                        "choke_point": choke,
+                        "status": r["operational_status"],
+                        "message": f"Departure window closed for {cargo} at {choke}; route is not yet submerged."
+                    }
+                ))
+            elif dep_min is not None and dep_min <= 60.0:
                 await self.bus.publish(SwarmMessage(
                     sender="LifeSupportLogisticsAgent",
                     topic="directive.urgent_dispatch",

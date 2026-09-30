@@ -18,7 +18,7 @@ from app.dataset import get_corridor
 class SpatialMapGenerator:
     """
     Synthesizes composite false-color GIS rasters combining DEM slope, SAR radar backscatter,
-    and vector infrastructure footprints for multimodal spatial inspection by Gemini 3.7 Flash.
+    and vector infrastructure footprints for multimodal spatial inspection by Gemini 2.5 Flash.
     """
 
     def __init__(self, width: int = 700, height: int = 700):

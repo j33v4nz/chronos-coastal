@@ -49,7 +49,7 @@ class ApexAgent:
                 priority="P1_STRATEGIC_RESOURCES",
                 action="COMMANDEER_HIGH_VOLUME_DEWATERING_PUMPS",
                 target="Municipal Disaster Fund",
-                details=f"Parametric Oracle confirmed SAR threshold exceedance. Instant liquidity of ${oracle_voucher.get('payout_amount_usd', 5000000):,.0f} USD released. Commandeer 8x 500m³/h diesel pumps for sub-basins."
+                details=f"Scenario oracle crossed its modeled threshold. Simulated liquidity voucher: ${oracle_voucher.get('payout_amount_usd', 0):,.0f} USD. Review before any real allocation."
             ))
 
         # 2. Logistics Priority Directives (Oxygen & Diesel Convoys)
@@ -59,7 +59,7 @@ class ApexAgent:
             cargo = r["cargo_type"]
             choke = r["choke_point_name"]
 
-            if dep_min <= 0.0 or r["is_currently_submerged"]:
+            if r["is_currently_submerged"]:
                 directives.append(TacticalDirective(
                     code="DIR-LOGISTICS-REROUTE",
                     priority="P0_LIFE_CRITICAL",
@@ -67,7 +67,15 @@ class ApexAgent:
                     target=f"{cargo} Convoy -> {r['destination_id']}",
                     details=f"{choke} is impassable. Road corridor severed. Activate State Police air-bridge or NDRF inflatable pontoon boats."
                 ))
-            elif dep_min <= 60.0:
+            elif dep_min is not None and dep_min <= 0.0:
+                directives.append(TacticalDirective(
+                    code="DIR-LOGISTICS-WINDOW-CLOSED",
+                    priority="P0_LIFE_CRITICAL",
+                    action="FIND_ALTERNATE_ROUTE",
+                    target=f"{cargo} Convoy -> {r['destination_id']}",
+                    details=f"The safe departure window has closed at {choke}; the road is not yet submerged."
+                ))
+            elif dep_min is not None and dep_min <= 60.0:
                 directives.append(TacticalDirective(
                     code="DIR-LOGISTICS-IMMEDIATE-DISPATCH",
                     priority="P0_LIFE_CRITICAL",
@@ -81,7 +89,9 @@ class ApexAgent:
                     priority="P2_TACTICAL_STAGING",
                     action="STAGE_STANDBY_CREW",
                     target=f"{cargo} Convoy",
-                    details=f"Departure window remaining: {dep_min} min across {choke}. Pre-stage heavy military tankers at origin depot."
+                    details=(f"Departure window remaining: {dep_min} min across {choke}."
+                             if dep_min is not None else
+                             f"No clearance breach predicted before landfall at {choke}.")
                 ))
 
         # 3. Healthcare Life-Support Directives
@@ -111,7 +121,7 @@ class ApexAgent:
                 priority="P1_STRUCTURAL_DEFENSE",
                 action="DEPLOY_GEOBAG_RIPRAP",
                 target=vision_report.get("target_facility", "Critical Facility"),
-                details=f"Gemini 3.7 Flash detected slope washout probability of {vision_report.get('structural_washout_probability')*100:.0f}%. Mobilize 500 sandbags and riprap geotextile along river embankment."
+                details=f"Site inspection estimated a slope washout probability of {vision_report.get('structural_washout_probability')*100:.0f}%. Mobilize 500 sandbags and riprap geotextile along river embankment."
             ))
 
         # Threat classification

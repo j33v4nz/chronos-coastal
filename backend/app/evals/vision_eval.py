@@ -1,6 +1,6 @@
 """
 CHRONOS-COASTAL Multimodal Vision Evaluation Suite
-Evaluates Gemini 3.7 Flash and spatial vision inspector against golden annotated GIS ground truth.
+Evaluates Gemini 2.5 Flash and spatial vision inspector against synthetic reference-box fixtures.
 Calculates:
 - Bounding Box Intersection over Union (IoU)
 - Mean IoU (mIoU)

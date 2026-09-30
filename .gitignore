@@ -32,6 +32,8 @@ yarn-error.log*
 .pnpm-debug.log*
 frontend/dist/
 frontend/node_modules/
+backend/app/evals/evaluation_results.json
+backend/app/evals/gemini_finetune_data.jsonl
 
 # Environment & IDE
 .env

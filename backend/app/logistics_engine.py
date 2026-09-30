@@ -142,8 +142,8 @@ class LifeSupportLogisticsEngine:
             if tts_hours is None:
                 # Water depth never breaches critical threshold during the simulation window
                 status = "CLEAR_PASSABLE"
-                tts_minutes = hours_to_landfall * 60.0
-                departure_window_min = tts_minutes - transit_time_min
+                tts_minutes = None
+                departure_window_min = None
                 is_submerged = False
                 urgency = "LOW"
             elif tts_hours <= 0.0 or current_water_depth >= crit_depth_m:
@@ -190,7 +190,10 @@ class LifeSupportLogisticsEngine:
             })
 
         # Sort assessments by shortest departure window
-        corridor_assessments.sort(key=lambda x: x["departure_window_remaining_min"])
+        corridor_assessments.sort(
+            key=lambda x: float("inf") if x["departure_window_remaining_min"] is None
+            else x["departure_window_remaining_min"]
+        )
 
         return {
             "corridor_id": self.corridor_id,
@@ -198,5 +201,9 @@ class LifeSupportLogisticsEngine:
             "hours_to_landfall": hours_to_landfall,
             "routes": corridor_assessments,
             "total_routes": len(corridor_assessments),
-            "shortest_departure_window_min": corridor_assessments[0]["departure_window_remaining_min"] if corridor_assessments else 0.0
+            "shortest_departure_window_min": next(
+                (route["departure_window_remaining_min"] for route in corridor_assessments
+                 if route["departure_window_remaining_min"] is not None),
+                None
+            )
         }

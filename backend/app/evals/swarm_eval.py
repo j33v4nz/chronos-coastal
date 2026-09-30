@@ -104,13 +104,13 @@ class SwarmEvaluationEngine:
         for r in routes:
             # If road is submerged, departure window must be closed (<= 0)
             if r["is_currently_submerged"]:
-                if r["departure_window_remaining_min"] <= 0.0:
+                if r["departure_window_remaining_min"] == 0.0:
                     safe_decisions += 1
             else:
                 # If departure window is open, travel time must not exceed time to submersion
                 tts = r["time_to_submersion_min"]
                 if tts is not None:
-                    if r["departure_window_remaining_min"] <= tts:
+                    if r["departure_window_remaining_min"] is not None and r["departure_window_remaining_min"] <= tts:
                         safe_decisions += 1
                 else:
                     safe_decisions += 1

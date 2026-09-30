@@ -9,8 +9,7 @@ Implements standard hydrological validation metrics:
 Includes SciPy-based parameter optimization to fine-tune hydrodynamic parameters (Cd, A_throat, L_bw).
 """
 
-import math
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 import numpy as np
 from scipy.optimize import minimize
 
@@ -21,7 +20,7 @@ from app.evals.benchmark_dataset import HISTORICAL_HYDRO_GAUGES
 
 class PhysicsCalibrationEngine:
     """
-    Evaluates and fine-tunes compound hydrodynamic models against historical gauge observations.
+    Computes diagnostics and fits model parameters against reference gauge values.
     """
 
     def __init__(self, corridor_id: str = "kochi"):
@@ -72,9 +71,9 @@ class PhysicsCalibrationEngine:
             return 0.0
         return float(corr ** 2)
 
-    def evaluate_corridor(self, corridor_id: Optional_str = None) -> Dict[str, Any]:
+    def evaluate_corridor(self, corridor_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Runs evaluation against historical gauge ground truth for the given corridor.
+        Compares raw model output with reference gauge values for the given corridor.
         """
         cid = corridor_id or self.corridor_id
         benchmark = HISTORICAL_HYDRO_GAUGES.get(cid)
@@ -104,8 +103,8 @@ class PhysicsCalibrationEngine:
                 river_inflow_m3s=inflow_m3s
             )
 
-            # In the physical gauge context, recorded WSE is absolute stage (elev + depth)
-            total_sim_stage = max(obs_wse * 0.92, sim_wse)  # Ground-referenced stage
+            # Keep model predictions independent of the observations used to assess them.
+            total_sim_stage = sim_wse
             obs_list.append(obs_wse)
             sim_list.append(total_sim_stage)
 
@@ -138,7 +137,11 @@ class PhysicsCalibrationEngine:
                 "mae_m": round(mae, 4),
                 "pbias_pct": round(pbias, 2),
                 "r_squared": round(r2, 4),
-                "calibration_grade": "EXCEPTIONAL" if nse >= 0.90 else "VERY_GOOD" if nse >= 0.75 else "GOOD"
+                "calibration_grade": (
+                    "EXCEPTIONAL" if nse >= 0.90 else
+                    "VERY_GOOD" if nse >= 0.75 else
+                    "NEEDS_CALIBRATION" if nse >= 0.0 else "POOR"
+                )
             },
             "gauge_comparisons": gauge_comparisons
         }
@@ -155,30 +158,37 @@ class PhysicsCalibrationEngine:
 
         initial_cd = float(self.engine.params.get("inlet_discharge_coeff", 0.72))
         initial_area = float(self.engine.params.get("inlet_throat_area_m2", 4800.0))
-        l_bw = float(self.engine.params.get("backwater_length_km", 34.5))
 
         def objective(params):
             cd, area = params
             if cd <= 0.1 or area <= 500:
                 return 1e6
+            self.engine.params["inlet_discharge_coeff"] = cd
+            self.engine.params["inlet_throat_area_m2"] = area
             sims = []
             for g in gauges:
-                # Custom computation with tuned parameters
-                h_throat = (1.0 / (2 * 9.80665)) * ((inflow_m3s / (cd * area)) ** 2)
-                eta_dam = h_throat * (1.0 + 0.35 * max(0.0, surge_m - 0.5))
-                decay = math.exp(-g["distance_along_river_km"] / l_bw)
-                wse = max(surge_m, eta_dam * decay)
-                sims.append(max(g["observed_wse_m"] * 0.92, wse))
+                sims.append(self.engine.calculate_wse_at_point(
+                    dist_coast_km=g["distance_from_coast_km"],
+                    dist_river_km=g["distance_along_river_km"],
+                    ocean_surge_m=surge_m,
+                    river_inflow_m3s=inflow_m3s
+                ))
             sims = np.array(sims)
             # Minimize (1 - NSE) + RMSE
             nse = self.calculate_nse(obs, sims)
             rmse = self.calculate_rmse(obs, sims)
             return (1.0 - nse) + rmse * 0.1
 
-        res = minimize(objective, [initial_cd, initial_area], method="Nelder-Mead", options={"maxiter": 150})
+        res = minimize(
+            objective, [initial_cd, initial_area], method="L-BFGS-B",
+            bounds=[(0.4, 0.95), (1000.0, 10000.0)],
+            options={"maxiter": 150}
+        )
         best_cd, best_area = float(res.x[0]), float(res.x[1])
 
         # Evaluate before and after
+        self.engine.params["inlet_discharge_coeff"] = initial_cd
+        self.engine.params["inlet_throat_area_m2"] = initial_area
         before_eval = self.evaluate_corridor(self.corridor_id)
 
         # Temporary apply
@@ -205,10 +215,6 @@ class PhysicsCalibrationEngine:
                 "a_throat_m2": round(calibrated_area, 1)
             },
             "baseline_nse": before_eval["metrics"]["nash_sutcliffe_efficiency"],
-            "calibrated_nse": max(before_eval["metrics"]["nash_sutcliffe_efficiency"], after_eval["metrics"]["nash_sutcliffe_efficiency"]),
-            "improvement_pct": round(max(0.0, (after_eval["metrics"]["nash_sutcliffe_efficiency"] - before_eval["metrics"]["nash_sutcliffe_efficiency"]) * 100), 2)
+            "calibrated_nse": after_eval["metrics"]["nash_sutcliffe_efficiency"],
+            "improvement_pct": round((after_eval["metrics"]["nash_sutcliffe_efficiency"] - before_eval["metrics"]["nash_sutcliffe_efficiency"]) * 100, 2)
         }
-
-
-# Type helper
-Optional_str = Any

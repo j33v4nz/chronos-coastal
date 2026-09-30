@@ -1,13 +1,11 @@
 """
-CHRONOS-COASTAL Master Evaluation Runner
-Orchestrates hydrologic calibration, multimodal vision evals, swarm cascade benchmarks,
-and exports the fine-tuning dataset.
+CHRONOS-COASTAL Diagnostic Runner
+Runs reference-scenario checks and exports synthetic example records.
 """
 
 import os
 import json
 import time
-import asyncio
 from typing import Dict, Any
 
 from app.evals.physics_calibration import PhysicsCalibrationEngine
@@ -51,30 +49,26 @@ class ChronosEvaluationRunner:
         # 4. Generate & verify fine-tuning dataset
         num_finetune_records = GeminiFineTuneDatasetGenerator.export_to_jsonl(FINETUNE_FILE)
 
-        # 5. Compute Composite Benchmark Score (out of 100)
+        # 5. Summarize reference-scenario diagnostics
         mean_nse = sum(p["metrics"]["nash_sutcliffe_efficiency"] for p in physics_results.values()) / len(corridors)
         macro_map50 = vision_results["macro_averages"]["macro_precision_50"]
         macro_miou = vision_results["macro_averages"]["macro_mIoU"]
         grid_f1 = swarm_results["macro_averages"]["mean_breaker_trip_f1"]
         safety_fidelity = swarm_results["macro_averages"]["mean_safety_protocol_fidelity"]
 
-        # Weighted composite score
-        # 30% Hydrologic NSE + 25% Vision mAP@50 + 20% Vision mIoU + 15% Grid Trip F1 + 10% Logistics Safety
-        composite_score = (
-            (mean_nse * 30.0) +
-            (macro_map50 * 25.0) +
-            (macro_miou * 20.0) +
-            (grid_f1 * 15.0) +
-            (safety_fidelity * 10.0)
-        )
+        # These reference scenarios and synthetic vision fixtures are useful for
+        # regression checks, but cannot support a real-world composite accuracy score.
 
         elapsed_seconds = round(time.time() - start_time, 2)
 
         summary = {
+            "evaluation_version": 2,
+            "validation_scope": "DEMO_REFERENCE_SCENARIOS",
+            "validation_note": "Reference scenarios and synthetic vision fixtures are not independent field validation.",
             "evaluation_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "evaluation_duration_seconds": elapsed_seconds,
-            "composite_benchmark_score": round(composite_score, 2),
-            "benchmark_rating": "GRADE_A_EXCELLENCE" if composite_score >= 90.0 else "GRADE_B_STRONG",
+            "composite_benchmark_score": None,
+            "benchmark_rating": "NOT_FIELD_VALIDATED",
             "headline_metrics": {
                 "mean_nash_sutcliffe_efficiency": round(mean_nse, 4),
                 "vision_macro_map_50": round(macro_map50, 4),
@@ -95,7 +89,7 @@ class ChronosEvaluationRunner:
                 "status": "READY",
                 "file_path": FINETUNE_FILE,
                 "record_count": num_finetune_records,
-                "model_target": "gemini-3.7-flash"
+                "model_target": "synthetic-example-records"
             }
         }
 
@@ -108,21 +102,9 @@ class ChronosEvaluationRunner:
 
         return summary
 
-    @classmethod
-    def get_cached_or_run(cls) -> Dict[str, Any]:
-        """Returns cached results if available, else executes run."""
-        if os.path.exists(RESULTS_FILE):
-            try:
-                with open(RESULTS_FILE, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                pass
-        runner = cls()
-        return asyncio.run(runner.run_full_evaluation())
-
-
 if __name__ == "__main__":
+    import asyncio
     runner = ChronosEvaluationRunner()
     result = asyncio.run(runner.run_full_evaluation())
-    print(f"Evaluation complete! Composite score: {result['composite_benchmark_score']}/100")
+    print("Reference-scenario diagnostics complete.")
     print(f"Metrics: {json.dumps(result['headline_metrics'], indent=2)}")

@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
-      - name: Run Test Suite (46 Tests & Evals)
+      - name: Run Test Suite (48 Tests & Evals)
         env:
           PYTHONPATH: backend
         run: |
