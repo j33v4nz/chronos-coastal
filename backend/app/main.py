@@ -4,6 +4,7 @@ Autonomous Multi-Agent Swarm Orchestrator & Digital Twin Gateway
 """
 
 import os
+import json
 import asyncio
 import logging
 from contextlib import asynccontextmanager
@@ -23,6 +24,7 @@ from app.swarm.logistics_agent import LifeSupportLogisticsAgent
 from app.swarm.oracle_agent import ParametricOracleAgent
 from app.swarm.apex_agent import ApexAgent
 from app.simulation import ChronosSimulationEngine
+from app.evals.runner import ChronosEvaluationRunner, RESULTS_FILE, FINETUNE_FILE
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("ChronosMain")
@@ -269,6 +271,48 @@ async def verify_parametric_oracle(req: Optional[SimulationRequest] = None):
     hydro = last_simulation_state["hydro"] or hydro_agent.engine.simulate(surge, inflow)
     voucher = await oracle_agent.execute_and_publish(surge, inflow, hydro, corridor_id=cid)
     return voucher.model_dump()
+
+
+# -------------------------------------------------------------
+# Evaluation & Calibration Benchmark Endpoints
+# -------------------------------------------------------------
+@app.get("/api/evals/results")
+async def get_evaluation_results():
+    """Returns the latest hydrologic calibration, vision mAP, and swarm benchmark scorecard."""
+    return ChronosEvaluationRunner.get_cached_or_run()
+
+
+@app.post("/api/evals/run")
+async def execute_evals_benchmark():
+    """Executes a fresh evaluation run across all 4 corridors and updates scorecard."""
+    runner = ChronosEvaluationRunner()
+    results = await runner.run_full_evaluation()
+    return results
+
+
+@app.get("/api/evals/finetune-dataset")
+async def get_finetune_dataset(sample_limit: int = Query(default=5, ge=1, le=50)):
+    """Returns metadata and preview samples of the Gemini 3.7 Flash fine-tuning dataset."""
+    if not os.path.exists(FINETUNE_FILE):
+        runner = ChronosEvaluationRunner()
+        await runner.run_full_evaluation()
+
+    samples = []
+    total_lines = 0
+    with open(FINETUNE_FILE, "r", encoding="utf-8") as f:
+        for idx, line in enumerate(f):
+            total_lines += 1
+            if idx < sample_limit:
+                samples.append(json.loads(line))
+
+    return {
+        "status": "READY",
+        "file_path": FINETUNE_FILE,
+        "format": "JSONL (Gemini / Google GenAI Fine-Tuning)",
+        "target_model": "gemini-3.7-flash",
+        "total_records": total_lines,
+        "sample_records": samples
+    }
 
 
 # -------------------------------------------------------------

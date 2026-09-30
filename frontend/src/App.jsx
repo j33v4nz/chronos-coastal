@@ -8,6 +8,7 @@ import SwarmMissionFeed from './components/SwarmMissionFeed';
 import GeminiInspectorModal from './components/GeminiInspectorModal';
 import ParametricOracleModal from './components/ParametricOracleModal';
 import PitchGuideModal from './components/PitchGuideModal';
+import ModelEvalsModal from './components/ModelEvalsModal';
 
 export default function App() {
   // Active Corridor
@@ -28,6 +29,7 @@ export default function App() {
   const [isGeminiOpen, setIsGeminiOpen] = useState(false);
   const [isOracleOpen, setIsOracleOpen] = useState(false);
   const [isPitchOpen, setIsPitchOpen] = useState(false);
+  const [isEvalsOpen, setIsEvalsOpen] = useState(false);
   const [inspectionData, setInspectionData] = useState(null);
   const [isInspecting, setIsInspecting] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -202,6 +204,7 @@ export default function App() {
         onSelectCorridor={handleSelectCorridor}
         corridors={corridors}
         onOpenPitchGuide={() => setIsPitchOpen(true)}
+        onOpenModelEvals={() => setIsEvalsOpen(true)}
         onOpenGeminiInspector={triggerGeminiInspection}
         onOpenParametricOracle={() => setIsOracleOpen(true)}
         isLoading={isLoading}
@@ -291,6 +294,12 @@ export default function App() {
         onTriggerScenario={handleSelectScenario}
         onTriggerGemini={triggerGeminiInspection}
         onTriggerOracle={() => setIsOracleOpen(true)}
+      />
+
+      {/* Modal 4: Model Evaluation & Hydraulic Calibration Harness */}
+      <ModelEvalsModal
+        isOpen={isEvalsOpen}
+        onClose={() => setIsEvalsOpen(false)}
       />
     </div>
   );

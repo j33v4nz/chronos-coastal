@@ -1,5 +1,5 @@
 import React from 'react';
-import { Waves, Zap, ShieldAlert, Cpu, Eye, FileCheck, Presentation, MapPin, ChevronDown } from 'lucide-react';
+import { Waves, Zap, ShieldAlert, Cpu, Eye, FileCheck, Presentation, MapPin, ChevronDown, BarChart3 } from 'lucide-react';
 
 export default function Header({
   simData,
@@ -9,6 +9,7 @@ export default function Header({
   onOpenPitchGuide,
   onOpenGeminiInspector,
   onOpenParametricOracle,
+  onOpenModelEvals,
   isLoading
 }) {
   const hydro = simData?.hydro || {};
@@ -103,6 +104,16 @@ export default function Header({
         >
           <Presentation className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
           <span>Pitch Guide</span>
+        </button>
+
+        {/* Model Evals Button */}
+        <button
+          onClick={onOpenModelEvals}
+          className="px-3 py-1.5 rounded-lg bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:text-purple-200 text-xs font-semibold flex items-center space-x-1.5 hover:bg-purple-500/30 transition shadow-[0_0_12px_rgba(168,85,247,0.25)]"
+          title="Empirical validation against historical gauges, mAP@50, and Gemini fine-tuning"
+        >
+          <BarChart3 className="w-3.5 h-3.5 text-purple-400" />
+          <span>Model Evals (99.4)</span>
         </button>
 
         {/* Gemini Vision Inspector Button */}
