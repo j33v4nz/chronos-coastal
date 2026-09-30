@@ -1,5 +1,5 @@
 """
-CHRONOS-COASTAL Geotechnical Vision Agent (Gemini 2.5 Flash Multimodal Integration)
+CHRONOS-COASTAL Geotechnical Vision Agent (Gemini 3.7 Flash Multimodal Integration)
 Inspects 3-band composite false-color GIS rasters:
 - Red: DEM Slope > 35°
 - Green: SAR Backscatter Delta <= -3.5dB
@@ -26,7 +26,7 @@ logger = logging.getLogger("VisionAgent")
 
 class GeotechnicalVisionAgent:
     """
-    Multimodal Spatial Inspector utilizing Gemini 2.5 Flash via the official Google GenAI SDK.
+    Multimodal Spatial Inspector utilizing Gemini 3.7 Flash via the official Google GenAI SDK.
     Inspects composite GIS tensors for embankment scouring, slope failure scarps, and generator pad depression pooling.
     Fails over seamlessly to a deterministic synthetic engine when offline or without an API key.
     """
@@ -50,6 +50,7 @@ Your mission:
         self.corridor_id = corridor_id
         self.map_gen = SpatialMapGenerator(width=700, height=700)
         self.api_key = os.getenv("GEMINI_API_KEY", "").strip()
+        self.model = os.getenv("GEMINI_MODEL", "gemini-3.7-flash")
         self._init_gemini_client()
 
     def set_corridor(self, corridor_id: str):
@@ -72,7 +73,7 @@ Your mission:
         target_facility: Optional[str] = None,
         corridor_id: Optional[str] = None
     ) -> GeotechnicalReport:
-        """Inspects composite GIS image via Gemini 2.5 Flash or offline synthetic fallback."""
+        """Inspects composite GIS image via Gemini 3.7 Flash or offline synthetic fallback."""
         if corridor_id:
             self.set_corridor(corridor_id)
 
@@ -114,7 +115,7 @@ Your mission:
         surge_m: float,
         target_facility: Optional[str]
     ) -> GeotechnicalReport:
-        """Calls Gemini 2.5 Flash using official Google GenAI SDK."""
+        """Calls Gemini 3.7 / 2.5 Flash using official Google GenAI SDK."""
         from google.genai import types
 
         buf = io.BytesIO()
@@ -132,8 +133,8 @@ Analyze slope stability scarp risks (Red band), saturated SAR flood areas (Green
 Return a strict GeotechnicalReport JSON schema with 2D bounding boxes [ymin, xmin, ymax, xmax].
 """
 
-        response = await asyncio.to_thread(self.client.models.generate_content,
-            model="gemini-2.5-flash",
+        response = await asyncio.wait_for(self.client.aio.models.generate_content(
+            model=self.model,
             contents=[
                 types.Part.from_bytes(data=img_bytes, mime_type="image/jpeg"),
                 user_prompt
@@ -144,10 +145,10 @@ Return a strict GeotechnicalReport JSON schema with 2D bounding boxes [ymin, xmi
                 response_schema=GeotechnicalReport,
                 temperature=0.2
             )
-        )
+        ), timeout=35)
 
         parsed_json = json.loads(response.text)
-        parsed_json["engine_mode"] = "GEMINI_2.5_FLASH_LIVE"
+        parsed_json["engine_mode"] = self.model.upper().replace("-", "_") + "_LIVE"
         return GeotechnicalReport(**parsed_json)
 
     def _synthetic_geotechnical_fallback(

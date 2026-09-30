@@ -1,0 +1,13 @@
+services:
+  chronos:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.7-flash}
+    volumes:
+      - chronos-data:/data
+    restart: unless-stopped
+volumes:
+  chronos-data:

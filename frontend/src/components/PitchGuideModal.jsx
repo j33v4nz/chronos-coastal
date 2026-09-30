@@ -19,6 +19,7 @@ export default function PitchGuideModal({
       time: "0:00 – 0:45",
       title: "The Trap & The Core Problem",
       tagline: "Why standard flood tools fail and people die in cyclones",
+      screenCue: "Point at Header telemetry & baseline sliders showing calm conditions before compound surge.",
       script: `Judges, every flood tool in this hackathon will show you a blue circle on a map and call it a flood. That is NOT how people die in cyclones. During Cyclone Michaung and the Kerala Deluge, 80% of damage happened 15 kilometers inland because swollen river runoff met ocean surge at the river mouth and backed up into the city. Worse: when one coastal substation flooded at just 40cm, upstream breakers tripped, plunging dry hospitals miles inland into blackout. This is CHRONOS-COASTAL: the first physics-coupled compound inundation and cascading resilience twin.`,
       actionLabel: "Load Baseline Conditions (0.4m surge / 280 m³/s)",
       onAction: () => {
@@ -29,6 +30,7 @@ export default function PitchGuideModal({
       time: "0:45 – 1:30",
       title: "Compound Flooding & Cascading Dark-Grid",
       tagline: "Watch backwater pool 8km inland and trip 220kV breakers",
+      screenCue: "Click 'Execute Scene' to trigger +1.85m surge & 550 m³/s inflow. Point at backwater pooling +3.1m inland, Nettoor breaker trip, and Lakeshore DG ignition.",
       script: `Watch what happens when ocean surge reaches +1.85m while monsoon runoff swells to 550 m³/s. Notice the coastline has manageable water, but 8km inland along the estuary delta, water has backed up by 3.1 meters. Look at Nettoor Substation—water breaches the 0.4m switchgear threshold. Automated ANSI 21 distance relays trip! Now look at VPS Lakeshore Hospital: the hospital is completely dry on higher ground (elevation 3.0m). But its grid power is DEAD. The hospital switches to emergency diesel with fuel counting down.`,
       actionLabel: "Simulate Compound Landfall (+1.85m / 550 m³/s)",
       onAction: () => {
@@ -39,6 +41,7 @@ export default function PitchGuideModal({
       time: "1:30 – 2:00",
       title: "Life-Support Logistics Clearance Clocks",
       tagline: "Oxygen convoys drown before diesel fuel tankers",
+      screenCue: "Point at Logistics Countdown HUD showing Liquid Oxygen departure window shutting 1h 10m earlier than diesel tankers.",
       script: `You cannot evacuate an entire ventilator ICU 6 hours before a cyclone. You must defend in place. Look at the Logistics Countdown: Liquid Medical Oxygen tankers have low-slung cryogenic valves that drown at just 20cm of water. Heavy diesel trucks can ford 45cm. Notice that Kundannoor Bridge reaches 20cm in 200 minutes—the Oxygen departure window closes over an hour before the fuel convoy! Chronos gives commanders the exact minute convoys must roll.`,
       actionLabel: "Inspect Logistics Countdown Clocks",
       onAction: () => {}
@@ -47,6 +50,7 @@ export default function PitchGuideModal({
       time: "2:00 – 2:30",
       title: "Gemini 3.7 Flash Multimodal Spatial Audit",
       tagline: "Inspecting DEM slope, SAR backscatter & asset pads",
+      screenCue: "Click 'Execute Scene' to open Gemini 3.7 Inspector. Point at 2D bounding boxes and the real-time thought stream detecting embankment scour.",
       script: `Instead of text-in, text-out chatbots, Chronos passes an uncompressed 3-band composite false-color GIS tensor directly into Gemini 3.7 Flash: Red is DEM slope gradient >35°, Green is Sentinel-1 SAR radar backscatter saturation, and Blue is critical infrastructure vector pads. Watch the live thought stream: Gemini inspects the riverbank, locates toe scour scarps along the ICU approach ramp with normalized 2D bounding boxes, and specifies exact geobag riprap countermeasures.`,
       actionLabel: "Launch Gemini 3.7 Multimodal Inspector",
       onAction: () => {
@@ -57,6 +61,7 @@ export default function PitchGuideModal({
       time: "2:30 – 3:00",
       title: "Parametric Oracle & Pan-India Scale",
       tagline: "Instant $5M liquidity & protecting 7,516 km of coastline",
+      screenCue: "Click 'Execute Scene' to open Parametric Oracle. Point at $5M instant voucher with SHA-256 seal, then switch corridors to Chennai, Mumbai, or Odisha.",
       script: `Chronos doesn't stop at prediction—it automates disaster liquidity. Sentinel-1 SAR change detection confirms a backscatter drop of -3.8dB over 24% of the basin. The Parametric Oracle verifies the threshold and executes an instant $5M contingency liquidity release to the municipal emergency pool within minutes. Crucially judges: this is not a one-city toy. We benchmarked our physics on Kochi's 2018 ground truth, but our pipeline is geography-agnostic. With one click on our corridor switcher, the exact same engine models the Adyar river in Chennai, the Mithi in Mumbai, and the Mahanadi in Odisha—delivering an operational shield for India's entire 7,516 km coastline. Thank you.`,
       actionLabel: "Trigger Parametric Oracle Verification",
       onAction: () => {
@@ -141,6 +146,18 @@ export default function PitchGuideModal({
               "{current.script}"
             </p>
           </div>
+
+          {/* Visual Presentation Cue for Pitcher */}
+          {current.screenCue && (
+            <div className="p-2.5 rounded-lg bg-cyan-950/30 border border-cyan-500/30 flex items-start gap-2 text-xs">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 uppercase tracking-wider shrink-0 mt-0.5">
+                ON-SCREEN CUE
+              </span>
+              <span className="text-slate-300 font-mono text-[11px] leading-snug">
+                {current.screenCue}
+              </span>
+            </div>
+          )}
 
           {/* Interactive Action Trigger */}
           <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-between">

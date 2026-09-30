@@ -1,0 +1,11 @@
+{
+  "name": "chronos-coastal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix frontend run build && node scripts/build_sites.mjs",
+    "test:hosted": "node --test worker/tests/*.test.mjs",
+    "start": "bash run.sh"
+  }
+}

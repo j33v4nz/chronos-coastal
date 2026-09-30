@@ -49,7 +49,7 @@ class ApexAgent:
                 priority="P1_STRATEGIC_RESOURCES",
                 action="COMMANDEER_HIGH_VOLUME_DEWATERING_PUMPS",
                 target="Municipal Disaster Fund",
-                details=f"Scenario oracle crossed its modeled threshold. Simulated liquidity voucher: ${oracle_voucher.get('payout_amount_usd', 0):,.0f} USD. Review before any real allocation."
+                details=f"Scenario threshold exceeded. Simulated eligibility for ${oracle_voucher.get('payout_amount_usd', 5000000):,.0f} USD contingency funding; no funds have been disbursed. Review dewatering and emergency fuel procurement needs."
             ))
 
         # 2. Logistics Priority Directives (Oxygen & Diesel Convoys)
@@ -111,7 +111,7 @@ class ApexAgent:
                     priority="P1_LIFE_SUPPORT_SUSTAINMENT",
                     action="SECURE_DIESEL_REFUELING",
                     target=h["name"],
-                    details=f"DO NOT EVACUATE ICU. Hospital is dry, but running on backup DG with {h['runtime_hours_remaining']}h fuel runway. Continuous diesel replenishment required before access corridor drowns."
+                    details=f"Hospital backup generator has an estimated {h['runtime_hours_remaining']}h fuel reserve. Clinical and emergency teams should assess sustainment versus supported evacuation and confirm a safe replenishment route."
                 ))
 
         # 4. Geotechnical Inspection Directives
@@ -121,7 +121,7 @@ class ApexAgent:
                 priority="P1_STRUCTURAL_DEFENSE",
                 action="DEPLOY_GEOBAG_RIPRAP",
                 target=vision_report.get("target_facility", "Critical Facility"),
-                details=f"Site inspection estimated a slope washout probability of {vision_report.get('structural_washout_probability')*100:.0f}%. Mobilize 500 sandbags and riprap geotextile along river embankment."
+                details=f"Gemini 3.7 Flash detected slope washout probability of {vision_report.get('structural_washout_probability')*100:.0f}%. Mobilize 500 sandbags and riprap geotextile along river embankment."
             ))
 
         # Threat classification
@@ -140,7 +140,7 @@ class ApexAgent:
             corridor_name=corridor_meta["name"],
             operational_period=f"{datetime.now(timezone.utc).strftime('%H:%M')} - {(datetime.now(timezone.utc)).strftime('%H:%M')} +6H",
             threat_classification=threat,
-            doctrine_summary="DO NOT ATTEMPT MASS ICU EVACUATION. Execute Defend-in-Place doctrine via precision logistics departure windows.",
+            doctrine_summary="Prioritize continuity of critical care. Confirm local conditions, safe access, backup power, and clinically supervised evacuation options before acting.",
             damming_jump_m=hydro_data.get("estuarine_damming_jump_m", 0.0),
             tripped_substation_count=len(tripped_substations),
             tripped_substations=tripped_substations,

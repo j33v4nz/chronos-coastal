@@ -13,9 +13,10 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Resp
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
 
 from app.dataset import CORRIDORS, get_corridor, list_available_corridors
 from app.map_generator import SpatialMapGenerator
@@ -25,10 +26,10 @@ from app.swarm.grid_agent import GridCascadeAgent
 from app.swarm.vision_agent import GeotechnicalVisionAgent
 from app.swarm.logistics_agent import LifeSupportLogisticsAgent
 from app.swarm.oracle_agent import ParametricOracleAgent
+from app.hydro_engine import CompoundHydroEngine
 from app.swarm.apex_agent import ApexAgent
 from app.simulation import ChronosSimulationEngine
 from app.evals.runner import ChronosEvaluationRunner, RESULTS_FILE, FINETUNE_FILE
-from app.hydro_engine import CompoundHydroEngine
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("ChronosMain")
@@ -234,7 +235,7 @@ async def run_simulation_step(req: SimulationRequest):
 @app.post("/api/gemini/inspect")
 async def inspect_geotechnical_tile(req: GeotechnicalInspectionRequest):
     """
-    Passes a synthesized 3-band false-color GIS tile directly to Gemini 2.5 Flash.
+    Passes a synthesized 3-band false-color GIS tile directly to Gemini 3.7 Flash.
     Returns normalized 2D bounding boxes and slope failure risks.
     """
     cid = req.corridor_id.lower().strip()
@@ -316,7 +317,7 @@ async def execute_evals_benchmark():
 
 @app.get("/api/evals/finetune-dataset")
 async def get_finetune_dataset(sample_limit: int = Query(default=5, ge=1, le=50)):
-    """Returns metadata and preview samples of the Gemini 2.5 Flash fine-tuning dataset."""
+    """Returns metadata and preview samples of synthetic example records."""
     if not os.path.exists(FINETUNE_FILE):
         runner = ChronosEvaluationRunner()
         await runner.run_full_evaluation()
@@ -360,7 +361,10 @@ async def websocket_tactical_feed(websocket: WebSocket):
 # -------------------------------------------------------------
 # Frontend Static Asset Mounting
 # -------------------------------------------------------------
-frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../frontend/dist"))
+from app.operations import router as operations_router
+app.include_router(operations_router)
+
+frontend_dist = str(Path(__file__).resolve().parents[2] / "frontend" / "dist")
 if os.path.exists(frontend_dist):
     app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
     logger.info(f"Mounted frontend static assets from {frontend_dist}")
