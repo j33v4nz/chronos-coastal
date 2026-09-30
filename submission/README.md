@@ -2,9 +2,9 @@
 
 Working prototype: https://chronos-coastal.jeevangeorge2030i.chatgpt.site
 
-PDF to upload: `chronos-coastal-deck.pdf` — 9 slides, about 1.15 MB; below the 5 MB limit.
+PDF to upload: `chronos-coastal-deck.pdf` — 9 slides, about 1.11 MB; below the 5 MB limit.
 
-Demo to upload: `chronos-coastal-demo.mp4` — narrated 1080p H.264/AAC, 2 minutes 53 seconds. Download it from the repository's v1.0.0-submission release. Upload it to YouTube (public or unlisted) or Google Drive, enable Anyone with the link access, and paste that provider URL into the form. The GitHub download is a public backup, not the form's requested Drive/YouTube link.
+Demo to upload: `chronos-coastal-demo.mp4` — narrated 1080p H.264/AAC, 2 minutes 54 seconds. Download it from the repository's v1.1.0-google-ai release. Upload it to YouTube (public or unlisted) or Google Drive, enable Anyone with the link access, and paste that provider URL into the form. The GitHub download is a public backup, not the form's requested Drive/YouTube link.
 
 The user chose to handle the provider upload and form submission. No form was submitted by this agent.
 
@@ -21,4 +21,4 @@ Explore how compound coastal flood scenarios affect power dependencies, hospital
 Prototype: https://chronos-coastal.jeevangeorge2030i.chatgpt.site
 Repository: https://github.com/j33v4nz/ggl
 
-This is a preparedness demonstration using sample infrastructure and screening assumptions. It does not establish field accuracy, issue official warnings, contact emergency authorities or transfer funds. The recording labels rule-based drafting and synthetic inspection; live providers require separate configuration.
+This is a preparedness demonstration using sample infrastructure and screening assumptions. It does not establish field accuracy, issue official warnings, contact emergency authorities or transfer funds. The updated recording demonstrates live Google Gemini advisory generation; image inspection remains explicitly synthetic. The public prototype stores the Gemini credential as a server secret and labels any provider fallback.

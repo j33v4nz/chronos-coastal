@@ -23,7 +23,7 @@ SCENES = [
     ('02 · Compare scenarios', 'Choose baseline conditions, then increase the stress. The simulation recalculates asset depths, upstream power failures, and route windows. Rainfall runoff is an explicit optional assumption. The comparison helps teams ask better questions before conditions become critical.', 'Change the conditions. Trace the consequences.'),
     ('03 · Follow the dependency', 'Now switch to Kochi. This hospital is dry in the modeled scenario, yet its upstream electricity supply is interrupted. Open the asset detail to see the distinction, along with backup generator reserves. A flood map alone would miss this service dependency.', 'Dry ground does not guarantee power continuity.'),
     ('04 · Protect access', 'Oxygen and diesel deliveries have different assumed clearance limits and travel times. These route cards show the estimated latest departure, the choke point, and the peak depth. An open route has no predicted breach within the modeled horizon.', 'Separate oxygen and diesel resupply windows.'),
-    ('05 · Prepare a clear advisory', 'Prepare an advisory from this exact scenario. The draft includes the run identifier and recommended actions. Without an API key, this demo uses clearly labeled rule-based drafting and synthetic inspection. The backend can also use configured Gemini inference.', 'Evidence → reviewable draft → action.'),
+    ('05 · Google AI turns evidence into action', 'Google Gemini now drafts an advisory from this exact scenario. It reasons over the infrastructure impacts and resupply windows, then returns a structured message for review. The screen records the live Gemini model and run identifier. Image inspection remains explicitly synthetic.', 'Live Google Gemini → evidence-linked advisory → review.'),
     ('06 · Verify delivery', 'Download the brief and send the reviewed draft to the in-app test inbox. A receipt confirms what happened. This does not contact an authority. The draft and receipt persist, and another browser session has its own inbox.', 'A real demo receipt. A clearly labeled test inbox.'),
     ('07 · Know the evidence', 'The data sources view distinguishes live weather forecasts, optional satellite observations, and model assumptions. No unavailable observations are invented. Hydrology, grid, and logistics outputs are checked against the Python engine across one hundred scenarios.', 'Forecast, observation, and assumption stay distinct.'),
     ('Earlier action starts with clarity', 'Chronos Coastal is a working preparedness prototype, with four corridors, a public demo, a reproducible repository, and tested evidence flows. The next step is local data calibration and partner validation. Explore the prototype using the link on screen.', 'Built for communities. Designed for earlier action.'),
@@ -123,7 +123,11 @@ def record():
             page.get_by_role('button', name='Prepare advisory', exact=True).click()
             caption(5)
             page.wait_for_timeout(2000)
-            page.get_by_role('button', name='Generate draft', exact=True).click()
+            with page.expect_response(lambda response: response.url.endswith('/api/operations/advisories'), timeout=60000) as generated:
+                page.get_by_role('button', name='Generate draft', exact=True).click()
+            result = generated.value.json()
+            assert generated.value.status == 200 and result.get('engine_mode') == 'gemini_live', 'Recording requires a successful live Google AI advisory.'
+            (TEMP / 'google-ai-evidence.json').write_text(json.dumps(result, indent=2))
             expect(page.locator('.draft-document')).to_be_visible(timeout=45000)
             page.locator('.draft-document').screenshot(path=str(TEMP / 'draft.png'))
         scene(5, advisory)
@@ -159,7 +163,7 @@ def record():
 
 def render():
     data = json.loads((TEMP / 'timeline.json').read_text())
-    inputs = ['ffmpeg', '-y', '-i', data['raw_video']]
+    inputs = ['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', data['raw_video']]
     filters = []
     for scene in data['scenes']:
         i = scene['index']

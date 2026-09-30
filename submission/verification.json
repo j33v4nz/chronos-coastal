@@ -1,29 +1,29 @@
 {
-  "prepared_at": "2026-09-30T16:49:53.672915+00:00",
+  "prepared_at": "2026-09-30T17:21:54.872510+00:00",
   "prototype_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site",
   "repository_url": "https://github.com/j33v4nz/ggl",
-  "release_url": "https://github.com/j33v4nz/ggl/releases/tag/v1.0.0-submission",
+  "release_url": "https://github.com/j33v4nz/ggl/releases/tag/v1.1.0-google-ai",
   "deck_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site/presentation.pdf",
-  "video_backup_url": "https://github.com/j33v4nz/ggl/releases/download/v1.0.0-submission/chronos-coastal-demo.mp4",
+  "video_backup_url": "https://github.com/j33v4nz/ggl/releases/download/v1.1.0-google-ai/chronos-coastal-demo.mp4",
   "video_provider_link": null,
   "video_upload_responsibility": "user",
   "files": {
     "chronos-coastal-deck.pdf": {
-      "bytes": 1151635,
-      "sha256": "5df6beb38acaa81d9a80f8eaf15c52034137b0a3062ba6615140c9296e365c83"
+      "bytes": 1110154,
+      "sha256": "3c8a842642a370b97d2119258ddd5f58d080f1b4f5ea964b45f390b2a5a7a1c6"
     },
     "chronos-coastal-demo.mp4": {
-      "bytes": 8684559,
-      "sha256": "7e104d1c65c145e5cec6128fbd15e528a95acbd659d8a762701de1f3f82404ad"
+      "bytes": 8526810,
+      "sha256": "e6a000cca2d557182a4b42409d24ef3b67e34b1341e65285f34d3ab17b2e9d29"
     }
   },
   "video": {
-    "duration_seconds": 172.667583,
+    "duration_seconds": 173.966667,
     "resolution": "1920x1080",
     "video_codec": "H.264",
     "audio_codec": "AAC",
     "narrated": true,
-    "recorded_prototype_commit": "35786b3755549f9f02034ecd89c6c32ff42f854c"
+    "recorded_prototype_commit": "5e3d1ff756b77c6ff8268aa60ca16c7fb9b4e17d"
   },
   "checks": {
     "backend_tests_passed": 58,
@@ -56,12 +56,36 @@
       ]
     },
     "container": "Docker image build, dashboard, health and simulation passed in GitHub Actions",
-    "ci_evidence_url": "https://github.com/j33v4nz/ggl/actions/runs/36744686938"
+    "ci_evidence_url": "https://github.com/j33v4nz/ggl/actions/runs/36749482155",
+    "live_google_ai": {
+      "verified_at": "2026-09-30T17:20:52.167994+00:00",
+      "prototype_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site",
+      "recorded_source_commit": "5e3d1ff756b77c6ff8268aa60ca16c7fb9b4e17d",
+      "provider": "Google Gemini API",
+      "model": "gemini-3.5-flash-lite",
+      "engine_mode": "gemini_live",
+      "advisory_id": "ADV-B4A2CF326C",
+      "snapshot_id": "RUN-17170E4898",
+      "advisory_sha256": "d900cbfbdf6ac9498c725bf1d7fa8e0378befaa2b3a764f6df6b0e0262fa739e",
+      "sample_brief_sha256": "85090c49c93286e090de6ad85315420abcb692976c6687b0bc44064ae3f7ed03",
+      "checks": [
+        "first-visit advisory generation",
+        "visible model attribution",
+        "exported brief marked gemini_live",
+        "recorded live Gemini generation",
+        "public desktop/mobile flows"
+      ],
+      "credential_storage": "hosting server secret",
+      "satellite_inspection": "synthetic_fixture",
+      "hackathon_dates_verified": false
+    }
   },
   "provider_scope": {
-    "public_demo_advisory_engine": "rule_based_draft",
+    "public_demo_advisory_engine": "gemini_live",
     "satellite": "not_configured",
     "external_dispatch": "test_inbox_only",
-    "field_validation": "not_established"
+    "field_validation": "not_established",
+    "gemini_model": "gemini-3.5-flash-lite",
+    "fallback": "explicitly labeled rule_based_draft on provider failure"
   }
 }

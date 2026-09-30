@@ -20,9 +20,9 @@ Now switch to Kochi. This hospital is dry in the modeled scenario, yet its upstr
 
 Oxygen and diesel deliveries have different assumed clearance limits and travel times. These route cards show the estimated latest departure, the choke point, and the peak depth. An open route has no predicted breach within the modeled horizon.
 
-## 05 · Prepare a clear advisory
+## 05 · Google AI turns evidence into action
 
-Prepare an advisory from this exact scenario. The draft includes the run identifier and recommended actions. Without an API key, this demo uses clearly labeled rule-based drafting and synthetic inspection. The backend can also use configured Gemini inference.
+Google Gemini now drafts an advisory from this exact scenario. It reasons over the infrastructure impacts and resupply windows, then returns a structured message for review. The screen records the live Gemini model and run identifier. Image inspection remains explicitly synthetic.
 
 ## 06 · Verify delivery
 

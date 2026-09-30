@@ -74,11 +74,13 @@ The corridor topology and hydrologic parameters are sample data in code. The map
 
 See [TASKS.md](TASKS.md) for the original hackathon planning notes.
 
+Reused components and data providers are cited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). [BRICS_APPLICABILITY.md](BRICS_APPLICABILITY.md) explains how to replace local corridor data, calibrate assumptions, and extend languages for additional BRICS contexts. The current sample corridors remain in India; additional-country deployments are not claimed. Hackathon eligibility depends on the organizers' dates and the team's development history; repository timestamps alone do not establish it.
+
 ## Public prototype and deployment
 
 The public demo is published at [Chronos Coastal](https://chronos-coastal.jeevangeorge2030i.chatgpt.site). Its browser dashboard uses the hosted adapter in `worker/`, with D1 storage scoped to each browser session. The adapter implements the same screening hydrology, power cascade, and logistics equations as Python. `scripts/check_engine_parity.py` compares complete outputs for 100 deterministic scenarios across all four corridors.
 
-The hosted demo supports scenario controls, infrastructure inspection, forecast context, advisory drafting, brief export, and test inbox receipts. External dispatch, Earth Engine authentication, diagnostic APIs and WebSocket events run in the Python backend. Provider status is explicit in the interface.
+The hosted demo supports scenario controls, infrastructure inspection, forecast context, advisory drafting, brief export, and test inbox receipts. Live Google Gemini 3.5 Flash Lite advisory generation and evidence export were verified on the public prototype. Its credential is held as a server secret. Every draft records whether Gemini succeeded or the explicitly labeled rule-based fallback was used. External dispatch, Earth Engine authentication, diagnostic APIs and WebSocket events run in the Python backend. Provider status is explicit in the interface.
 
 To build the hosted package:
 
@@ -95,7 +97,7 @@ Scenario snapshots, immutable advisory drafts, and delivery receipts persist in 
 
 ## Submission materials
 
-The `submission/` directory contains the PDF deck, narration, and a manifest with artifact sizes and verification status. The MP4 demo and complete source archive are attached to the [submission release](https://github.com/j33v4nz/ggl/releases/tag/v1.0.0-submission). The presentation can also be downloaded from the prototype’s About dialog. The deck must remain below the submission form's 5 MB limit. Public video sharing is complete only once its YouTube or Google Drive link is verified without authentication.
+The `submission/` directory contains the PDF deck, narration, and a manifest with artifact sizes and verification status. The MP4 demo and complete source archive are attached to the [submission release](https://github.com/j33v4nz/ggl/releases/tag/v1.1.0-google-ai). The presentation can also be downloaded from the prototype’s About dialog. The deck must remain below the submission form's 5 MB limit. Public video sharing is complete only once its YouTube or Google Drive link is verified without authentication.
 
 To regenerate media after installing `scripts/requirements-media.txt` and providing FFmpeg, Chromium and Noto Sans fonts:
 
@@ -104,5 +106,11 @@ To regenerate media after installing `scripts/requirements-media.txt` and provid
     python scripts/create_demo.py narrate
     python scripts/create_demo.py record
     python scripts/create_demo.py render
+
+To verify the Google AI integration after configuring the hosted server secret:
+
+    python scripts/verify_google_ai.py
+
+This check requires a successful live Gemini advisory, a visible model label, and an exported brief marked `gemini_live`; fallback output does not pass it.
 
 The video records the public prototype. Narration is generated from `submission/demo-narration.md` using a voice service. Provider credentials and private account content are never sent by the media scripts.

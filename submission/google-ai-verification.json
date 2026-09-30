@@ -1,0 +1,22 @@
+{
+  "verified_at": "2026-09-30T17:20:52.167994+00:00",
+  "prototype_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site",
+  "recorded_source_commit": "5e3d1ff756b77c6ff8268aa60ca16c7fb9b4e17d",
+  "provider": "Google Gemini API",
+  "model": "gemini-3.5-flash-lite",
+  "engine_mode": "gemini_live",
+  "advisory_id": "ADV-B4A2CF326C",
+  "snapshot_id": "RUN-17170E4898",
+  "advisory_sha256": "d900cbfbdf6ac9498c725bf1d7fa8e0378befaa2b3a764f6df6b0e0262fa739e",
+  "sample_brief_sha256": "85090c49c93286e090de6ad85315420abcb692976c6687b0bc44064ae3f7ed03",
+  "checks": [
+    "first-visit advisory generation",
+    "visible model attribution",
+    "exported brief marked gemini_live",
+    "recorded live Gemini generation",
+    "public desktop/mobile flows"
+  ],
+  "credential_storage": "hosting server secret",
+  "satellite_inspection": "synthetic_fixture",
+  "hackathon_dates_verified": false
+}

@@ -143,9 +143,9 @@ for i, route in enumerate(routes):
 text('These are screening estimates, not live navigation or dispatch authorization.', 64, 599, 17, MUTED)
 c.showPage()
 
-start('Evidence → review → delivery', 'A clear message, with a verifiable trail.', 'Every draft records its scenario, actual engine mode, and evidence limitations.')
+start('Google AI → evidence → review', 'Gemini turns scenario evidence into action.', 'Live Google Gemini drafts a structured advisory; the exported brief records the actual model mode.')
 screenshot('advisory.png', 64, 211, 678, 423, source_crop=(390, 70, 820, 512))
-for top, title, detail in [(220, 'Grounded draft', 'Recommendations are linked to the run identifier. Offline drafting is explicitly labeled.'), (352, 'Immutable evidence', 'Checksummed drafts and delivery receipts persist independently. Repeated requests share one receipt.'), (500, 'Reviewed test delivery', 'Download the brief. Deliver to the in-app inbox. Another browser session has a separate inbox.')]:
+for top, title, detail in [(220, 'Live Google AI', 'Gemini 3.5 Flash Lite reasons over scenario evidence and returns recommendations for review.'), (352, 'Immutable evidence', 'Checksummed drafts and delivery receipts persist independently. Repeated requests share one receipt.'), (500, 'Reviewed test delivery', 'Download the brief. Deliver to the in-app inbox. Another browser session has a separate inbox.')]:
     text(title, 789, top, 22, GREEN, True, width=421)
     text(detail, 789, top + 40, 16, MUTED, width=412, leading=27)
 c.showPage()
@@ -159,7 +159,7 @@ for x, title, lines in columns:
         text(line, x + 22, 314 + i * 43, 15, INK, width=322)
 box(64, 552, 1152, 78, LIME)
 text('Providers stay explicit', 87, 569, 18, INK, True)
-text('Open-Meteo forecast context · optional Gemini drafting · satellite observations require configuration', 87, 599, 15, INK, width=1100)
+text('Live Google Gemini drafting · Open-Meteo forecast context · satellite observations require configuration', 87, 599, 15, INK, width=1100)
 c.showPage()
 
 start('Verification and next step', 'Tested behavior. Honest scope.', 'Engineering checks establish repeatable prototype behavior, not field accuracy.')
@@ -171,8 +171,8 @@ for i, (number, label) in enumerate(stats):
     text(label, x + 22, 309, 14, MUTED, width=230)
 text('Also verified', 64, 400, 23, GREEN, True)
 text('Public desktop and mobile flow; downloads and receipts; session isolation; provider-outage behavior; Docker build and container runtime in GitHub Actions.', 64, 447, 18, INK, width=520, leading=30)
-text('Next: local partner validation', 681, 400, 23, GREEN, True)
-text('Replace sample topology with maintained asset data. Calibrate hydraulic assumptions. Validate radar candidates and road conditions with local partners.', 681, 447, 18, INK, width=515, leading=30)
+text('Next: BRICS partner pilots', 681, 400, 23, GREEN, True)
+text('Adapt for Brazil, China, Russia, and South Africa with licensed local asset data. Calibrate hydraulics and validate languages with local partners.', 681, 447, 18, INK, width=515, leading=30)
 text('No independent field validation, official warnings, confirmed medical status, or financial transfers are claimed.', 64, 614, 14, MUTED)
 c.showPage()
 

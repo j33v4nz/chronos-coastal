@@ -1,17 +1,18 @@
 CHRONOS COASTAL | PREPAREDNESS DRAFT
-Kochi-Vembanad Estuary Corridor — preparedness advisory
-2026-09-30T16:33:46.625Z
+Municipal Preparedness Draft: Kochi-Vembanad Estuary Corridor
+2026-09-30T17:19:09.282Z
 
-Scenario screening identifies 4 exposed assets, 3 interrupted substations and 198 ICU beds dependent on threatened services.
+This is a scenario screening exercise with limitations. Weather forecasts and simulated surge are different inputs. Recommendations require authority review. The scenario projects tier-1 catastrophic compound grid-healthcare collapse affecting 198 critical patients across 3 tripped substations and 4 flooded assets, with specific constraints on hospital generator runways and transport corridors.
 
-1. The scenario indicates loss of grid supply and generator availability, affecting 130 ICU beds. Clinical and emergency teams should assess supported power restoration or evacuation.
-2. Hospital backup generator has an estimated 53.3h fuel reserve. Clinical and emergency teams should assess sustainment versus supported evacuation and confirm a safe replenishment route.
-3. Departure window remaining: 175 min across Kundannoor Bridge Approach (NH-66 Bypass).
-4. Departure window remaining: 246 min across Container Terminal Road Bridge Abutment.
+1. Confirm local conditions, safe access, backup power, and clinically supervised evacuation options before acting.
+2. Stage standby crew for the Liquid Medical Oxygen Convoy across Kundannoor Bridge Approach with a departure window remaining of 175 min.
+3. Stage standby crew for the Diesel Fuel Convoy across Container Terminal Road Bridge Abutment with a departure window remaining of 246 min.
+4. Secure diesel refueling for VPS Lakeshore Multi-Speciality Hospital and assess sustainment versus supported evacuation.
+5. Dispatch mobile generator barges or assess supported power restoration/evacuation for Aster Medcity Super-Speciality.
 
 PUBLIC MESSAGE
-Preparedness exercise: monitor official weather bulletins, avoid flooded roads, and follow instructions from local emergency authorities. This scenario is not an official warning.
+Municipal preparedness draft for Kochi-Vembanad Estuary Corridor indicates a simulated compound surge and grid impact scenario. Recommendations require authority review and local condition confirmation.
 
-Evidence: RUN-72F9E68CA8 | Mode: rule_based_draft
+Evidence: RUN-17170E4898 | Mode: gemini_live
 Scenario screening; not an official forecast.
-SHA-256: 30228af7487520565839b4b49ed8817d90627526550dc878f1c077226e15ccac
+SHA-256: d900cbfbdf6ac9498c725bf1d7fa8e0378befaa2b3a764f6df6b0e0262fa739e
