@@ -19,11 +19,20 @@ const pretty = value => value?.replaceAll('_', ' ').toLowerCase() || '';
 const fmt = (n, digits = 0) => Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: digits });
 const date = value => value ? new Date(value).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Not retrieved';
 
-async function api(path, body, signal) {
+async function request(path, body, signal) {
   const response = await fetch('/api/operations' + path, { ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {}), signal });
   const result = await response.json();
   if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Request failed. Check the scenario inputs and try again.');
   return result;
+}
+
+// Establish the HttpOnly session before parallel startup requests. Hosted static
+// HTML can bypass the worker, so its response cannot establish this cookie.
+let sessionReady;
+async function api(path, body, signal) {
+  sessionReady ??= request('/status').catch(error => { sessionReady = null; throw error; });
+  const status = await sessionReady;
+  return path === '/status' ? status : request(path, body, signal);
 }
 
 function downloadScenario(data) {
