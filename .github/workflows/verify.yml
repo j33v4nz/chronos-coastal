@@ -23,3 +23,32 @@ jobs:
       - run: npm run build
       - run: npm run test:hosted
       - run: python scripts/check_engine_parity.py
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t chronos-coastal:check .
+      - run: docker run -d --name chronos-check -p 8000:8000 chronos-coastal:check
+      - name: Verify container runtime
+        run: |
+          python - <<'PY'
+          import json, time, urllib.request
+          for attempt in range(30):
+              try:
+                  with urllib.request.urlopen('http://localhost:8000/api/health', timeout=3) as response:
+                      assert json.load(response)['status'] == 'healthy'
+                  break
+              except Exception:
+                  if attempt == 29: raise
+                  time.sleep(1)
+          with urllib.request.urlopen('http://localhost:8000/') as response:
+              assert response.status == 200
+              assert b'<div id="root">' in response.read()
+          request = urllib.request.Request('http://localhost:8000/api/operations/simulate',
+              data=json.dumps({'corridor_id': 'kochi'}).encode(), headers={'Content-Type':'application/json'})
+          with urllib.request.urlopen(request) as response:
+              assert json.load(response)['success'] is True
+          print('Container dashboard, health endpoint and simulation passed.')
+          PY
+      - if: always()
+        run: docker logs chronos-check

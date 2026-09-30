@@ -62,6 +62,16 @@ test('browser sessions cannot retrieve another visitor’s evidence or inbox', a
   assert.deepEqual(inbox.data, []);
 });
 
+test('concurrent retry requests return one canonical receipt', async () => {
+  const env = environment();
+  const run = await call(env, '/api/operations/simulate', {});
+  const draft = await call(env, '/api/operations/advisories', { snapshot_id: run.data.snapshot_id });
+  const payload = { advisory_id: draft.data.advisory_id, recipient: 'Retry demonstration' };
+  const receipts = await Promise.all(Array.from({ length: 8 }, () => call(env, '/api/operations/dispatch', payload)));
+  for (const receipt of receipts) assert.deepEqual(receipt.data, receipts[0].data);
+  assert.equal((await call(env, '/api/operations/deliveries')).data.length, 1);
+});
+
 test('invalid numbers, malformed requests, unknown routes and external delivery are rejected', async () => {
   const env = environment();
   for (const payload of [{ ocean_surge_m: 6 }, { river_inflow_m3s: -1 }, { corridor_id: 'unknown' }, { rainfall_mm: '10' }, { include_rainfall_runoff: 'yes' }]) {

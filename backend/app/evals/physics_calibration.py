@@ -84,7 +84,7 @@ class PhysicsCalibrationEngine:
         inflow_m3s = benchmark["river_inflow_m3s"]
         gauges = benchmark["gauges"]
 
-        engine = CompoundHydroEngine(cid)
+        engine = self.engine if cid == self.corridor_id else CompoundHydroEngine(cid)
         obs_list = []
         sim_list = []
         gauge_comparisons = []

@@ -24,14 +24,14 @@ class CompoundHydroEngine:
     def __init__(self, corridor_id: str = "kochi"):
         self.corridor_id = corridor_id
         self.corridor_data = get_corridor(corridor_id)
-        self.params = self.corridor_data["hydrologic_params"]
+        self.params = dict(self.corridor_data["hydrologic_params"])
         self.assets = self.corridor_data["assets"]
 
     def set_corridor(self, corridor_id: str):
         """Switches the active corridor and updates hydrologic parameters."""
         self.corridor_id = corridor_id
         self.corridor_data = get_corridor(corridor_id)
-        self.params = self.corridor_data["hydrologic_params"]
+        self.params = dict(self.corridor_data["hydrologic_params"])
         self.assets = self.corridor_data["assets"]
 
     def compute_orifice_head_jump(self, river_inflow_m3s: float, ocean_surge_m: float) -> float:

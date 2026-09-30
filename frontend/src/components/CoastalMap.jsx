@@ -65,7 +65,8 @@ export default function CoastalMap({ data, corridor, selected, onSelect, earth }
       const active = a.id === selected?.id;
       if (exposure && a.water_depth_m > 0) L.circle([a.lat, a.lon], { radius: 350 + Math.min(a.water_depth_m, 3) * 200, weight: 1, color, fillColor: color, fillOpacity: .10, dashArray: '3 4' }).addTo(group.current);
       const icon = L.divIcon({ className: 'coast-marker-host', iconSize: [34, 34], iconAnchor: [17, 17], html: `<div class="coast-marker ${active ? 'selected' : ''}" style="--marker-color:${color}"><span>${symbol}</span></div>` });
-      const marker = L.marker([a.lat, a.lon], { icon }).addTo(group.current);
+      const marker = L.marker([a.lat, a.lon], { icon, title: a.name, alt: a.name }).addTo(group.current);
+      marker.getElement()?.setAttribute('aria-label', `Inspect ${a.name}`);
       marker.bindTooltip(`<strong>${escape(a.name)}</strong><br>${a.water_depth_m.toFixed(2)} m scenario depth`, { className: 'coast-tooltip', direction: 'top', offset: [0, -15] });
       marker.on('click', () => callbacks.current.onSelect(a));
     });

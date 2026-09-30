@@ -1,3 +1,5 @@
+> Historical planning notes. These items describe the original proposal, not verified release claims. The current prototype and its limitations are documented in README.md and submission/verification.json. Historical event statistics and performance targets below must not be used as evidence in a submission.
+
 > Historical hackathon planning notes. For the current implementation, setup, and limitations, see [README.md](README.md). Some tasks and claims below are outdated.
 
 # 📋 CHRONOS-COASTAL: Hackathon Task Division & Execution Roadmap

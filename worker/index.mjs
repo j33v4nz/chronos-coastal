@@ -159,7 +159,10 @@ async function route(request, env, session) {
     const existing = (await recent(env, session, 'delivery')).find(d => d.delivery_id === deliveryKey);
     if (existing) return json(existing);
     const record = { delivery_id: deliveryKey, advisory_id: input.advisory_id, channel, recipient, timestamp: timestamp(), status: 'delivered_to_test_inbox' };
-    return json(await put(env, session, 'delivery', deliveryKey, record));
+    const db = await database(env);
+    // Concurrent retries share one receipt, including its original timestamp.
+    await db.prepare('INSERT OR IGNORE INTO chronos_records VALUES (?, ?, ?, ?, ?)').bind(session, 'delivery', deliveryKey, JSON.stringify(record), record.timestamp).run();
+    return json(await get(env, session, 'delivery', deliveryKey));
   }
   if (method === 'GET' && path === '/api/operations/deliveries') return json(await recent(env, session, 'delivery'));
   const exported = path.match(/^\/api\/operations\/advisories\/(ADV-[A-Z0-9]+)\/export$/);
