@@ -7,8 +7,20 @@ import json
 import os
 import subprocess
 import sys
+import termios
 
-credential = json.loads(sys.stdin.readline())
+if sys.stdin.isatty():
+    original = termios.tcgetattr(sys.stdin.fileno())
+    hidden = original[:]
+    hidden[3] &= ~termios.ECHO
+    termios.tcsetattr(sys.stdin.fileno(), termios.TCSANOW, hidden)
+    print("Waiting for source credential on private stdin.", flush=True)
+    try:
+        credential = json.loads(sys.stdin.readline())
+    finally:
+        termios.tcsetattr(sys.stdin.fileno(), termios.TCSANOW, original)
+else:
+    credential = json.loads(sys.stdin.readline())
 remote = credential["remote_url"]
 if not remote.startswith("https://") or credential["auth_mode"] != "http_extra_header":
     raise SystemExit("Unsupported source credential")
