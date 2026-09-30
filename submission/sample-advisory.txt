@@ -1,0 +1,17 @@
+CHRONOS COASTAL | PREPAREDNESS DRAFT
+Kochi-Vembanad Estuary Corridor — preparedness advisory
+2026-09-30T16:33:46.625Z
+
+Scenario screening identifies 4 exposed assets, 3 interrupted substations and 198 ICU beds dependent on threatened services.
+
+1. The scenario indicates loss of grid supply and generator availability, affecting 130 ICU beds. Clinical and emergency teams should assess supported power restoration or evacuation.
+2. Hospital backup generator has an estimated 53.3h fuel reserve. Clinical and emergency teams should assess sustainment versus supported evacuation and confirm a safe replenishment route.
+3. Departure window remaining: 175 min across Kundannoor Bridge Approach (NH-66 Bypass).
+4. Departure window remaining: 246 min across Container Terminal Road Bridge Abutment.
+
+PUBLIC MESSAGE
+Preparedness exercise: monitor official weather bulletins, avoid flooded roads, and follow instructions from local emergency authorities. This scenario is not an official warning.
+
+Evidence: RUN-72F9E68CA8 | Mode: rule_based_draft
+Scenario screening; not an official forecast.
+SHA-256: 30228af7487520565839b4b49ed8817d90627526550dc878f1c077226e15ccac

@@ -33,7 +33,9 @@ class GeotechnicalVisionAgent:
 
     SYSTEM_PROMPT = """
 You are the CHRONOS-COASTAL Chief Geotechnical & Satellite Remote Sensing AI Inspector.
-You are inspecting an uncompressed 3-band false-color satellite and GIS raster:
+You are inspecting a SYNTHETIC demonstration GIS raster, not an observed satellite image.
+Never present its colors or shapes as confirmed real-world damage or measured terrain.
+Describe illustrative hazards for a preparedness exercise. Any risk score is uncalibrated.
 - RED CHANNEL: Digital Elevation Model (DEM) slope gradient > 35° (steep scarps, laterite embankments, cut slopes).
 - GREEN CHANNEL: Sentinel-1 C-Band SAR radar backscatter change Δσ° <= -3.5 dB (specular open water & soil saturation).
 - BLUE CHANNEL: Critical infrastructure footprints (substations, hospital ICU wards, generator pads) and arterial highways.
@@ -287,7 +289,7 @@ Return a strict GeotechnicalReport JSON schema with 2D bounding boxes [ymin, xmi
             overall_risk_level=risk_level,
             structural_washout_probability=washout_prob,
             detected_hazards=hazards,
-            geotechnical_summary=summary,
+            geotechnical_summary="Synthetic demonstration; no observed hazard is established. " + summary.replace("confirms", "illustrates"),
             recommended_countermeasures=countermeasures,
             engine_mode="SYNTHETIC_OFFLINE_RESILIENT"
         )

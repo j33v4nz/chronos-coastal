@@ -7,7 +7,7 @@ import os
 import json
 import asyncio
 import logging
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Response, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,6 +62,7 @@ last_simulation_state = {
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Launch priority event bus worker
+    bus.prepare()
     bus_task = asyncio.create_task(bus.run())
     logger.info("Chronos Tactical Event Bus task launched.")
 
@@ -87,6 +88,8 @@ async def lifespan(app: FastAPI):
     # Shutdown
     bus.stop()
     bus_task.cancel()
+    with suppress(asyncio.CancelledError):
+        await bus_task
     logger.info("Chronos Tactical Event Bus task terminated.")
 
 

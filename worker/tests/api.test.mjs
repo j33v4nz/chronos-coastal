@@ -74,7 +74,7 @@ test('concurrent retry requests return one canonical receipt', async () => {
 
 test('invalid numbers, malformed requests, unknown routes and external delivery are rejected', async () => {
   const env = environment();
-  for (const payload of [{ ocean_surge_m: 6 }, { river_inflow_m3s: -1 }, { corridor_id: 'unknown' }, { rainfall_mm: '10' }, { include_rainfall_runoff: 'yes' }]) {
+  for (const payload of [{ ocean_surge_m: 6 }, { river_inflow_m3s: -1 }, { corridor_id: 'unknown' }, { corridor_id: '__proto__' }, { corridor_id: 'constructor' }, { rainfall_mm: '10' }, { include_rainfall_runoff: 'yes' }]) {
     assert.ok([404, 422].includes((await call(env, '/api/operations/simulate', payload)).response.status));
   }
   assert.equal((await call(env, '/api/missing')).response.status, 404);

@@ -54,7 +54,7 @@ async function body(request) {
 function validateScenario(value) {
   const input = { corridor_id: 'chennai', ocean_surge_m: 1.8, river_inflow_m3s: 520, hours_to_landfall: 6, rainfall_mm: 150, include_rainfall_runoff: false };
   for (const key of Object.keys(input)) if (key in value) input[key] = value[key];
-  if (!corridors[input.corridor_id]) throw fail(404, 'Unknown coastal corridor');
+  if (typeof input.corridor_id !== 'string' || !Object.hasOwn(corridors, input.corridor_id)) throw fail(404, 'Unknown coastal corridor');
   for (const [key, min, max] of [['ocean_surge_m', 0, 5], ['river_inflow_m3s', 50, 2500], ['hours_to_landfall', .5, 24], ['rainfall_mm', 0, 1000]]) {
     if (typeof input[key] !== 'number' || !Number.isFinite(input[key]) || input[key] < min || input[key] > max) throw fail(422, `${key} must be between ${min} and ${max}.`);
   }
@@ -64,7 +64,7 @@ function validateScenario(value) {
 
 async function forecast(cid, refresh) {
   const corridor = corridors[cid];
-  if (!corridor) throw fail(404, 'Unknown coastal corridor');
+  if (!Object.hasOwn(corridors, cid)) throw fail(404, 'Unknown coastal corridor');
   const cached = weatherCache.get(cid);
   if (cached && !refresh && Date.now() - cached.time < 600000) return cached.value;
   try {
@@ -142,7 +142,7 @@ async function route(request, env, session) {
   if (weather && method === 'GET') return json(await forecast(weather[1], url.searchParams.get('refresh') === 'true'));
   const earth = path.match(/^\/api\/operations\/earth\/([a-z]+)$/);
   if (earth && method === 'GET') {
-    if (!corridors[earth[1]]) throw fail(404, 'Unknown coastal corridor');
+    if (!Object.hasOwn(corridors, earth[1])) throw fail(404, 'Unknown coastal corridor');
     return json({ mode: 'not_configured', corridor_id: earth[1], collections: ['COPERNICUS/S1_GRD', 'COPERNICUS/DEM/GLO30_2024_1', 'NASA/GPM_L3/IMERG_V07'], note: 'Satellite observations are not connected in this hosted demo. The Python backend supports authenticated Earth Engine access.' });
   }
   if (method === 'POST' && path === '/api/operations/simulate') {

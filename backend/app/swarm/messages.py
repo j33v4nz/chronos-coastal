@@ -47,8 +47,8 @@ class SwarmMessage(BaseModel):
 class GeotechnicalHazard(BaseModel):
     """Individual hazard detected by Gemini 2.5 Flash with normalized 2D bounding box."""
     label: str = Field(description="Classification label: e.g. SLOPE_FAILURE_SCARP, RETENTION_DEPRESSION, ACCESS_WASHOUT")
-    box_2d: List[int] = Field(description="Normalized coordinates [ymin, xmin, ymax, xmax] in 0-1000 scale")
-    confidence: float = Field(description="Detection confidence from 0.0 to 1.0")
+    box_2d: List[int] = Field(min_length=4, max_length=4, description="Normalized coordinates [ymin, xmin, ymax, xmax] in 0-1000 scale")
+    confidence: float = Field(ge=0, le=1, description="Uncalibrated model confidence from 0.0 to 1.0")
     description: str = Field(description="Technical rationale describing geotechnical soil/slope vulnerability")
 
 
@@ -57,7 +57,7 @@ class GeotechnicalReport(BaseModel):
     corridor_id: str
     target_facility: str
     overall_risk_level: str = Field(description="CRITICAL, HIGH, MODERATE, or LOW")
-    structural_washout_probability: float = Field(description="Probability of embankment or pad failure (0.0 to 1.0)")
+    structural_washout_probability: float = Field(ge=0, le=1, description="Uncalibrated demonstration risk score (0.0 to 1.0); not a measured failure probability")
     detected_hazards: List[GeotechnicalHazard] = Field(default_factory=list)
     geotechnical_summary: str
     recommended_countermeasures: List[str] = Field(default_factory=list)

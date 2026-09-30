@@ -46,6 +46,14 @@ class TacticalEventBus:
         self._active_websockets.discard(websocket)
         logger.info(f"WebSocket client disconnected. Remaining: {len(self._active_websockets)}")
 
+    def prepare(self):
+        """Create event-loop-owned state for a fresh application lifespan."""
+        if self._is_running:
+            raise RuntimeError("Cannot reset a running event bus")
+        self._queue = asyncio.PriorityQueue()
+        self._active_websockets.clear()
+        self._history.clear()
+
     async def broadcast_ws(self, message: SwarmMessage):
         """Broadcasts a priority swarm message to all connected WebSocket clients."""
         if not self._active_websockets:
@@ -54,9 +62,9 @@ class TacticalEventBus:
         payload = message.to_broadcast_dict()
         disconnected = set()
 
-        for ws in self._active_websockets:
+        for ws in tuple(self._active_websockets):
             try:
-                await ws.send_json(payload)
+                await asyncio.wait_for(ws.send_json(payload), timeout=3)
             except Exception:
                 disconnected.add(ws)
 

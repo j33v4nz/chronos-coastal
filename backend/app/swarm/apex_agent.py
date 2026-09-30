@@ -65,7 +65,7 @@ class ApexAgent:
                     priority="P0_LIFE_CRITICAL",
                     action="DEPLOY_AIR_DROP_OR_HOVERCRAFT",
                     target=f"{cargo} Convoy -> {r['destination_id']}",
-                    details=f"{choke} is impassable. Road corridor severed. Activate State Police air-bridge or NDRF inflatable pontoon boats."
+                    details=f"{choke} is impassable in the scenario. Review an alternate delivery method and confirm resources with local authorities."
                 ))
             elif dep_min is not None and dep_min <= 0.0:
                 directives.append(TacticalDirective(
@@ -81,7 +81,7 @@ class ApexAgent:
                     priority="P0_LIFE_CRITICAL",
                     action="ESCORT_CONVOY_NOW",
                     target=f"{cargo} Convoy -> {r['destination_id']}",
-                    details=f"Departure deadline closing in {dep_min} min! Police tactical escort cleared for heavy convoy across {choke} immediately."
+                    details=f"Estimated departure window: {dep_min} min across {choke}. Confirm route conditions and review escort needs before dispatch."
                 ))
             else:
                 directives.append(TacticalDirective(
@@ -103,7 +103,7 @@ class ApexAgent:
                     priority="P0_LIFE_CRITICAL",
                     action="DISPATCH_MOBILE_GENERATOR_BARGES",
                     target=h["name"],
-                    details=f"CATASTROPHIC BLACKOUT: Generator alternator submerged! {h['icu_patients']} ICU patients without ventilator power. Deploy flood-clearance military mobile DG sets immediately."
+                    details=f"The scenario indicates loss of grid supply and generator availability, affecting {h['icu_patients']} ICU beds. Clinical and emergency teams should assess supported power restoration or evacuation."
                 ))
             elif h.get("on_generator"):
                 directives.append(TacticalDirective(
@@ -121,7 +121,7 @@ class ApexAgent:
                 priority="P1_STRUCTURAL_DEFENSE",
                 action="DEPLOY_GEOBAG_RIPRAP",
                 target=vision_report.get("target_facility", "Critical Facility"),
-                details=f"Gemini 3.7 Flash detected slope washout probability of {vision_report.get('structural_washout_probability')*100:.0f}%. Mobilize 500 sandbags and riprap geotextile along river embankment."
+                details=f"The inspection reports an uncalibrated structural risk score of {vision_report.get('structural_washout_probability')*100:.0f}%. Review image provenance and local conditions before selecting protective measures."
             ))
 
         # Threat classification

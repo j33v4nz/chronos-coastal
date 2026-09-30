@@ -48,3 +48,4 @@ backend/app/evals/gemini_finetune_data.jsonl
 *.sqlite3-wal
 *.sqlite3-shm
 artifacts/
+submission/*.mp4

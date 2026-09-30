@@ -89,10 +89,20 @@ To build the hosted package:
 
 `dist/client`, `dist/server/index.js`, and `dist/.openai/hosting.json` form the deployable package. Keep the D1 binding named `DB`. Configure an optional Gemini key as a server secret; never put credentials in frontend code.
 
-For the complete Python server, `docker compose up --build` serves port 8000 and persists records in a named volume. The Docker deployment files are supplied; Docker execution is verified separately when a Docker daemon is available.
+For the complete Python server, `docker compose up --build` serves port 8000 and persists records in a named volume. The image build, dashboard, health endpoint, and simulation were verified in GitHub Actions.
 
 Scenario snapshots, immutable advisory drafts, and delivery receipts persist in SQLite under CHRONOS_DATA_DIR (defaults to temporary storage). Set that directory to a persistent volume for long-term use. Each record category retains at most 1,000 records locally and 100 records per browser session on the hosted demo.
 
 ## Submission materials
 
-The `submission/` directory contains the PDF deck, demo video, narration, and a manifest with artifact sizes and verification status. The deck must remain below the submission form's 5 MB limit. Public video sharing is complete only once its YouTube or Google Drive link is verified without authentication.
+The `submission/` directory contains the PDF deck, narration, and a manifest with artifact sizes and verification status. The MP4 demo and complete source archive are attached to the [submission release](https://github.com/j33v4nz/ggl/releases/tag/v1.0.0-submission). The presentation can also be downloaded from the prototype’s About dialog. The deck must remain below the submission form's 5 MB limit. Public video sharing is complete only once its YouTube or Google Drive link is verified without authentication.
+
+To regenerate media after installing `scripts/requirements-media.txt` and providing FFmpeg, Chromium and Noto Sans fonts:
+
+    python scripts/verify_browser.py
+    python scripts/create_deck.py
+    python scripts/create_demo.py narrate
+    python scripts/create_demo.py record
+    python scripts/create_demo.py render
+
+The video records the public prototype. Narration is generated from `submission/demo-narration.md` using a voice service. Provider credentials and private account content are never sent by the media scripts.

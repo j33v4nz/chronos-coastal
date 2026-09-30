@@ -1,0 +1,67 @@
+{
+  "prepared_at": "2026-09-30T16:49:53.672915+00:00",
+  "prototype_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site",
+  "repository_url": "https://github.com/j33v4nz/ggl",
+  "release_url": "https://github.com/j33v4nz/ggl/releases/tag/v1.0.0-submission",
+  "deck_url": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site/presentation.pdf",
+  "video_backup_url": "https://github.com/j33v4nz/ggl/releases/download/v1.0.0-submission/chronos-coastal-demo.mp4",
+  "video_provider_link": null,
+  "video_upload_responsibility": "user",
+  "files": {
+    "chronos-coastal-deck.pdf": {
+      "bytes": 1151635,
+      "sha256": "5df6beb38acaa81d9a80f8eaf15c52034137b0a3062ba6615140c9296e365c83"
+    },
+    "chronos-coastal-demo.mp4": {
+      "bytes": 8684559,
+      "sha256": "7e104d1c65c145e5cec6128fbd15e528a95acbd659d8a762701de1f3f82404ad"
+    }
+  },
+  "video": {
+    "duration_seconds": 172.667583,
+    "resolution": "1920x1080",
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "narrated": true,
+    "recorded_prototype_commit": "35786b3755549f9f02034ecd89c6c32ff42f854c"
+  },
+  "checks": {
+    "backend_tests_passed": 58,
+    "hosted_api_tests_passed": 6,
+    "engine_parity_scenarios_passed": 100,
+    "public_browser": {
+      "base": "https://chronos-coastal.jeevangeorge2030i.chatgpt.site",
+      "passed": true,
+      "javascript_errors": [],
+      "initial_metrics": [
+        "1/ 9",
+        "1substations",
+        "75ICU beds",
+        "190min"
+      ],
+      "checks": [
+        "desktop",
+        "mobile",
+        "four corridors",
+        "preset comparison",
+        "dry hospital cascade",
+        "route details",
+        "scenario export",
+        "draft generation",
+        "brief download",
+        "test dispatch",
+        "inbox persistence",
+        "session isolation",
+        "provider outage"
+      ]
+    },
+    "container": "Docker image build, dashboard, health and simulation passed in GitHub Actions",
+    "ci_evidence_url": "https://github.com/j33v4nz/ggl/actions/runs/36744686938"
+  },
+  "provider_scope": {
+    "public_demo_advisory_engine": "rule_based_draft",
+    "satellite": "not_configured",
+    "external_dispatch": "test_inbox_only",
+    "field_validation": "not_established"
+  }
+}
