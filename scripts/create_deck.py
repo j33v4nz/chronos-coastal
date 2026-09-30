@@ -87,7 +87,7 @@ def screenshot(name, x, top, width, height, source_crop=None):
 state = json.loads((EVIDENCE / 'scenario.json').read_text())
 hospital = next(h for h in state['grid']['hospitals'] if h['is_dry_but_outaged'])
 routes = state['logistics']['routes']
-public = 'https://chronos-coastal.jeevangeorge2030i.chatgpt.site'
+public = 'https://chronos-coastal.onrender.com/'
 
 start('Working public prototype', 'A dry hospital can still lose power.', dark=True)
 text('See the dependencies.\nAct before access closes.', 64, 222, 35, PAPER, True, width=485, leading=52)
@@ -182,8 +182,8 @@ text('Public prototype', 64, 397, 16, LIME, True)
 text(public.replace('https://', ''), 64, 435, 21, PAPER, width=910)
 c.linkURL(public, (64, 245, 1010, 295), relative=0, thickness=0)
 text('Repository + submission release', 64, 503, 16, LIME, True)
-text('github.com/j33v4nz/ggl', 64, 541, 24, PAPER)
-c.linkURL('https://github.com/j33v4nz/ggl', (64, 134, 750, 183), relative=0, thickness=0)
+text('github.com/j33v4nz/chronos-coastal', 64, 541, 24, PAPER)
+c.linkURL('https://github.com/j33v4nz/chronos-coastal', (64, 134, 750, 183), relative=0, thickness=0)
 qr = QrCodeWidget(public)
 x1, y1, x2, y2 = qr.getBounds()
 drawing = Drawing(190, 190, transform=[190 / (x2 - x1), 0, 0, 190 / (y2 - y1), 0, 0])
@@ -197,4 +197,7 @@ assert PDF.stat().st_size < 5_000_000, f'Deck exceeds 5 MB: {PDF.stat().st_size}
 public_dir = ROOT / 'frontend/public'
 public_dir.mkdir(exist_ok=True)
 shutil.copyfile(PDF, public_dir / 'presentation.pdf')
+dist_dir = ROOT / 'frontend/dist'
+if dist_dir.exists():
+    shutil.copyfile(PDF, dist_dir / 'presentation.pdf')
 print(f'PDF ready: {PDF}; {PAGE} slides; {PDF.stat().st_size:,} bytes (< 5 MB).')
