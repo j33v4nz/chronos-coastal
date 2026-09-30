@@ -13,6 +13,9 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Resp
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 from app.dataset import CORRIDORS, get_corridor, list_available_corridors
 from app.map_generator import SpatialMapGenerator
@@ -25,6 +28,7 @@ from app.swarm.oracle_agent import ParametricOracleAgent
 from app.swarm.apex_agent import ApexAgent
 from app.simulation import ChronosSimulationEngine
 from app.evals.runner import ChronosEvaluationRunner, RESULTS_FILE, FINETUNE_FILE
+from app.hydro_engine import CompoundHydroEngine
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("ChronosMain")
@@ -230,10 +234,12 @@ async def run_simulation_step(req: SimulationRequest):
 @app.post("/api/gemini/inspect")
 async def inspect_geotechnical_tile(req: GeotechnicalInspectionRequest):
     """
-    Passes a synthesized 3-band false-color GIS tile directly to Gemini 3.7 Flash.
+    Passes a synthesized 3-band false-color GIS tile directly to Gemini 2.5 Flash.
     Returns normalized 2D bounding boxes and slope failure risks.
     """
     cid = req.corridor_id.lower().strip()
+    if cid not in CORRIDORS:
+        raise HTTPException(status_code=400, detail=f"Invalid corridor '{cid}'.")
     report = await vision_agent.inspect_tile(
         water_depth_m=req.water_depth_m,
         surge_m=req.surge_m,
@@ -268,7 +274,17 @@ async def verify_parametric_oracle(req: Optional[SimulationRequest] = None):
     surge = req.ocean_surge_m if req else last_simulation_state["ocean_surge_m"]
     inflow = req.river_inflow_m3s if req else last_simulation_state["river_inflow_m3s"]
 
-    hydro = last_simulation_state["hydro"] or hydro_agent.engine.simulate(surge, inflow)
+    if cid not in CORRIDORS:
+        raise HTTPException(status_code=400, detail=f"Invalid corridor '{cid}'.")
+    cached = last_simulation_state
+    same_scenario = (
+        cached["corridor_id"] == cid
+        and cached["ocean_surge_m"] == surge
+        and cached["river_inflow_m3s"] == inflow
+    )
+    hydro = cached["hydro"] if same_scenario else None
+    if hydro is None:
+        hydro = CompoundHydroEngine(cid).simulate(surge, inflow)
     voucher = await oracle_agent.execute_and_publish(surge, inflow, hydro, corridor_id=cid)
     return voucher.model_dump()
 
@@ -278,8 +294,16 @@ async def verify_parametric_oracle(req: Optional[SimulationRequest] = None):
 # -------------------------------------------------------------
 @app.get("/api/evals/results")
 async def get_evaluation_results():
-    """Returns the latest hydrologic calibration, vision mAP, and swarm benchmark scorecard."""
-    return ChronosEvaluationRunner.get_cached_or_run()
+    """Returns reference-scenario diagnostics without a field-validity score."""
+    if os.path.exists(RESULTS_FILE):
+        try:
+            with open(RESULTS_FILE, "r", encoding="utf-8") as f:
+                cached = json.load(f)
+            if cached.get("evaluation_version") == 2:
+                return cached
+        except (OSError, ValueError):
+            pass
+    return await ChronosEvaluationRunner().run_full_evaluation()
 
 
 @app.post("/api/evals/run")
@@ -292,7 +316,7 @@ async def execute_evals_benchmark():
 
 @app.get("/api/evals/finetune-dataset")
 async def get_finetune_dataset(sample_limit: int = Query(default=5, ge=1, le=50)):
-    """Returns metadata and preview samples of the Gemini 3.7 Flash fine-tuning dataset."""
+    """Returns metadata and preview samples of the Gemini 2.5 Flash fine-tuning dataset."""
     if not os.path.exists(FINETUNE_FILE):
         runner = ChronosEvaluationRunner()
         await runner.run_full_evaluation()
@@ -308,8 +332,8 @@ async def get_finetune_dataset(sample_limit: int = Query(default=5, ge=1, le=50)
     return {
         "status": "READY",
         "file_path": FINETUNE_FILE,
-        "format": "JSONL (Gemini / Google GenAI Fine-Tuning)",
-        "target_model": "gemini-3.7-flash",
+        "format": "JSONL synthetic example records",
+        "target_model": "unvalidated-examples",
         "total_records": total_lines,
         "sample_records": samples
     }

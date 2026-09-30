@@ -103,7 +103,8 @@ class ChronosSimulationEngine:
                 "patients_in_blackout": grid_res["total_blacked_out_icu_patients"],
                 "urgent_logistics_routes": [
                     r["corridor_id"] for r in logistics_res["routes"]
-                    if r["departure_window_remaining_min"] < 180.0
+                    if r["departure_window_remaining_min"] is not None
+                    and r["departure_window_remaining_min"] < 180.0
                 ]
             }
         }

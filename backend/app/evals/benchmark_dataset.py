@@ -1,7 +1,7 @@
 """
 CHRONOS-COASTAL Evaluation Benchmark Dataset
-Golden ground-truth datasets for model calibration, evaluation (evals), and fine-tuning.
-Calibrated against real-world cyclonic and estuarine flood events across 4 national corridors:
+Reference scenario fixtures for model diagnostics and generated examples.
+These values do not include independent data provenance or field validation.
 1. Kochi (Kerala Deluge August 2018)
 2. Chennai (Cyclone Michaung Dec 2023 & Deluge 2015)
 3. Mumbai (Mithi River Deluge 2005 / Monsoonal Tidal Locks)
@@ -11,7 +11,7 @@ Calibrated against real-world cyclonic and estuarine flood events across 4 natio
 from typing import Dict, List, Any
 
 # ==============================================================================
-# 1. Historical Hydrological Gauge Ground-Truth (Observed vs Simulated Validation)
+# 1. Reference hydrological gauge values (provenance unverified)
 # ==============================================================================
 HISTORICAL_HYDRO_GAUGES: Dict[str, Dict[str, Any]] = {
     "kochi": {
@@ -222,7 +222,7 @@ HISTORICAL_HYDRO_GAUGES: Dict[str, Dict[str, Any]] = {
 
 
 # ==============================================================================
-# 2. Golden Geotechnical Vision Ground-Truth (Bounding Boxes & Hazard Labels)
+# 2. Synthetic geotechnical vision fixture boxes (matching offline fallback)
 # Normalized [ymin, xmin, ymax, xmax] in [0, 1000] range
 # ==============================================================================
 GOLDEN_VISION_GROUND_TRUTH: Dict[str, Dict[str, Any]] = {

@@ -45,7 +45,7 @@ class SwarmMessage(BaseModel):
 # =============================================================================
 
 class GeotechnicalHazard(BaseModel):
-    """Individual hazard detected by Gemini 3.7 Flash with normalized 2D bounding box."""
+    """Individual hazard detected by Gemini 2.5 Flash with normalized 2D bounding box."""
     label: str = Field(description="Classification label: e.g. SLOPE_FAILURE_SCARP, RETENTION_DEPRESSION, ACCESS_WASHOUT")
     box_2d: List[int] = Field(description="Normalized coordinates [ymin, xmin, ymax, xmax] in 0-1000 scale")
     confidence: float = Field(description="Detection confidence from 0.0 to 1.0")
@@ -53,7 +53,7 @@ class GeotechnicalHazard(BaseModel):
 
 
 class GeotechnicalReport(BaseModel):
-    """Structured report emitted by Gemini 3.7 Flash or the synthetic fallback engine."""
+    """Structured report emitted by Gemini 2.5 Flash or the synthetic fallback engine."""
     corridor_id: str
     target_facility: str
     overall_risk_level: str = Field(description="CRITICAL, HIGH, MODERATE, or LOW")
@@ -62,7 +62,7 @@ class GeotechnicalReport(BaseModel):
     geotechnical_summary: str
     recommended_countermeasures: List[str] = Field(default_factory=list)
     timestamp_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    engine_mode: str = "GEMINI_3.7_FLASH"
+    engine_mode: str = "UNSPECIFIED"
 
 
 class ParametricLiquidityVoucher(BaseModel):

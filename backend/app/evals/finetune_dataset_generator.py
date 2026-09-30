@@ -1,6 +1,6 @@
 """
 CHRONOS-COASTAL Gemini Fine-Tuning Dataset Generator
-Generates production-grade fine-tuning pairs formatted for the Google GenAI / Gemini Fine-Tuning API.
+Generates synthetic example records for development and interface checks.
 Format: JSONL containing {"messages": [{"role": "system", ...}, {"role": "user", ...}, {"role": "model", ...}]}
 Covers diverse scenarios across all 4 Indian coastal corridors.
 """
@@ -69,21 +69,21 @@ class GeminiFineTuneDatasetGenerator:
                                 "label": h["label"],
                                 "box_2d": h["box_2d"],
                                 "confidence": round(min(0.98, h.get("min_confidence", 0.85) + (water_depth * 0.05)), 2),
-                                "description": f"Verified geotechnical breach for {cid.title()} near {primary_hospital} under {water_depth:.2f}m hydraulic head."
+                                "description": f"Synthetic example hazard for {cid.title()} near {primary_hospital} under {water_depth:.2f}m modeled hydraulic head."
                             }
                             for h in gt_hazards
                         ],
                         "geotechnical_summary": (
                             f"Multimodal spatial audit for {primary_hospital} ({cid.title()}) under {surge:.2f}m ocean surge and "
-                            f"{inflow:.1f} m³/s discharge confirms {risk_level} geotechnical destabilization. "
-                            f"Toe erosion velocity exceeds 1.8 m/s with direct saturation of generator plinth foundations."
+                            f"{inflow:.1f} m³/s discharge illustrates {risk_level} modeled risk. "
+                            f"This example is generated from scenario fixtures, not an observed image."
                         ),
                         "recommended_countermeasures": [
                             f"Deploy rapid riprap/sandbag reinforcement along critical scarp.",
                             f"Activate standby 500 m³/h submersible dewatering pump at {primary_hospital} diesel generator basin.",
                             f"Impose axle-weight restrictions on approaching supply corridors before water exceeds 0.20m."
                         ],
-                        "engine_mode": "GEMINI_3.7_FLASH_FINE_TUNED"
+                        "engine_mode": "SYNTHETIC_EXAMPLE"
                     }
 
                     record = {

@@ -7,6 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.swarm.messages import SwarmMessage, Priority, GeotechnicalReport, ParametricLiquidityVoucher
+from app.hydro_engine import CompoundHydroEngine
+from app.logistics_engine import LifeSupportLogisticsEngine
 
 
 def test_api_health_endpoint():
@@ -92,3 +94,33 @@ def test_api_oracle_verify():
         assert len(data["sha256_cryptographic_seal"]) == 64
         assert data["threshold_exceeded"] is True
         assert data["payout_amount_usd"] == 5000000.0
+
+
+def test_oracle_verification_uses_requested_scenario():
+    """A request for another corridor must not reuse the last simulation's hydro state."""
+    with TestClient(app) as client:
+        client.post("/api/simulate", json={
+            "corridor_id": "kochi", "ocean_surge_m": 1.85,
+            "river_inflow_m3s": 550.0, "hours_to_landfall": 6.0
+        })
+        response = client.post("/api/oracle/verify", json={
+            "corridor_id": "chennai", "ocean_surge_m": 0.4,
+            "river_inflow_m3s": 100.0, "hours_to_landfall": 6.0
+        })
+        assert response.status_code == 200
+        expected = CompoundHydroEngine("chennai").simulate(0.4, 100.0)
+        assert response.json()["corridor_id"] == "chennai"
+        assert response.json()["flooded_area_fraction"] == expected["flooded_fraction"]
+
+
+def test_route_without_breach_has_no_departure_deadline(monkeypatch):
+    """A route that never reaches its clearance limit remains open through the horizon."""
+    engine = LifeSupportLogisticsEngine("kochi")
+    monkeypatch.setattr(engine, "calculate_choke_point_hydrograph", lambda **kwargs: [
+        {"time_elapsed_hours": 0.0, "wse_m": 0.0, "water_depth_m": 0.0},
+        {"time_elapsed_hours": 0.5, "wse_m": 0.0, "water_depth_m": 0.0},
+    ])
+    result = engine.evaluate_reachability(0.0, 100.0, hours_to_landfall=0.5)
+    assert all(route["operational_status"] == "CLEAR_PASSABLE" for route in result["routes"])
+    assert all(route["departure_window_remaining_min"] is None for route in result["routes"])
+    assert result["shortest_departure_window_min"] is None

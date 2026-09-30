@@ -1,3 +1,5 @@
+> Historical hackathon planning notes. For the current implementation, setup, and limitations, see [README.md](README.md). Some tasks and claims below are outdated.
+
 # 📋 CHRONOS-COASTAL: Hackathon Task Division & Execution Roadmap
 
 This document outlines the modular task division for **CHRONOS-COASTAL** (Physics-Coupled Compound Inundation & Critical Infrastructure Triaging Swarm). Designed for parallel execution across a 2-4 person team or phased solo development during a national hackathon sprint.
